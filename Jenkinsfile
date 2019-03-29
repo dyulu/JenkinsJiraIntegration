@@ -5,7 +5,7 @@ pipeline {
         label 'docker' 
     }
     */
-    //agent any
+    agent any
     stage('Initialize')
     {
         env.PATH = "/usr/local/bin"
