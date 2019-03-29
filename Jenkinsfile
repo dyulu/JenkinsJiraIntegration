@@ -6,14 +6,13 @@ pipeline {
     //agent any
     
     stages {
-        agent { docker { label 'docker' image 'maven:3-alpine' } }
-        
         stage('pre-build') {
             steps {
                 sh 'echo "Hello World!"'
             }
         }
         stage('build') {
+            agent { docker { label 'docker' image 'maven:3-alpine' } }
             steps {
                 sh 'echo "Build"'
                 sh 'mvn --version'
