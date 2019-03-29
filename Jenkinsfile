@@ -1,4 +1,4 @@
-env.PATH = "/usr/local/bin"
+PATH+EXTRA=/usr/local/bin
 pipeline {
     agent any
       
