@@ -1,4 +1,3 @@
-PATH+EXTRA=/usr/local/bin
 pipeline {
     agent any
       
