@@ -6,12 +6,12 @@ pipeline {
     }
     */
     agent any
-    stage('Initialize')
-    {
-        env.PATH = "/usr/local/bin"
-    }
       
     stages {
+        stage('Initialize')
+        {
+            env.PATH = "/usr/local/bin"
+        }
         stage('pre-build') {
             steps {
                 sh 'echo "Hello World!"'
