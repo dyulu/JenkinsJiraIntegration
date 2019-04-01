@@ -1,8 +1,9 @@
 pipeline {
     //agent any
-    agent {
-        docker { image 'maven:latest' }
-    }
+    //agent {
+    //    docker { image 'maven:latest' }
+    //}
+    agent { dockerfile true }
     
     stages {
         stage('pre-build') {
