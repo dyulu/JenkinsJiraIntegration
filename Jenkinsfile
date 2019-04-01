@@ -1,7 +1,7 @@
 pipeline {
     //agent any
     agent {
-        /Applications/Docker.app/Contents/Resources/bin/docker { image 'maven:3-alpine' }
+        docker { image 'maven:3-alpine' }
     }
     
     stages {
