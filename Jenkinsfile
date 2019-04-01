@@ -1,6 +1,8 @@
 pipeline {
     //agent any
-    agent { docker { image 'maven:3-alpine' } }
+    agent {
+        /Applications/Docker.app/Contents/Resources/bin/docker { image 'maven:3-alpine' }
+    }
     
     stages {
         stage('pre-build') {
