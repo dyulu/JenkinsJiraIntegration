@@ -1,18 +1,16 @@
 pipeline {
-    agent any
-      
+    //agent any
+    agent { docker { image 'maven:3-alpine' } }
+    
     stages {
         stage('pre-build') {
             steps {
                 sh 'echo "Hello World!"'
                 sh 'echo $PATH'
-                sh 'export PATH=/usr/local/bin:${PATH}'
-                sh 'echo ${PATH}'
                 sh 'ls -lart /usr/local/bin/'
             }
         }
         stage('build') {
-            agent { docker { image 'maven:3-alpine' } }
             steps {
                 sh 'echo "Build"'
                 sh 'mvn --version'
