@@ -6,9 +6,9 @@ pipeline {
             steps {
                 sh 'echo "Hello World!"'
                 sh 'echo $PATH'
-                sh 'PATH=/usr/local/bin:$PATH'
-                sh 'export PATH'
-                sh 'echo $PATH'
+                sh 'echo ${env.PATH}'
+                env.PATH = "/usr/local/bin:${env.PATH}"
+                sh 'echo ${env.PATH}'
                 sh 'ls -lart /usr/local/bin/'
             }
         }
