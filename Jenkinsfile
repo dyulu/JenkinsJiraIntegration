@@ -5,6 +5,8 @@ pipeline {
         stage('pre-build') {
             steps {
                 sh 'echo "Hello World!"'
+                sh 'echo $PATH'
+                sh 'ls -lart /usr/local/bin/'
             }
         }
         stage('build') {
