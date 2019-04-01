@@ -7,7 +7,7 @@ pipeline {
                 sh 'echo "Hello World!"'
                 sh 'echo $PATH'
                 sh 'echo ${env.PATH}'
-                env.PATH = "/usr/local/bin:${env.PATH}"
+                sh 'env.PATH = "/usr/local/bin:${env.PATH}"'
                 sh 'echo ${env.PATH}'
                 sh 'ls -lart /usr/local/bin/'
             }
