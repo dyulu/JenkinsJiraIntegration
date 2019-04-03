@@ -19,5 +19,11 @@ pipeline {
                 //sh 'mvn --version'
             }
         }
+        stage('JIRA') {
+            steps {
+                def serverInfo = jiraGetServerInfo()
+                echo serverInfo.data.toString()
+            }
+        }
     }
 }
