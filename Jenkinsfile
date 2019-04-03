@@ -21,7 +21,7 @@ pipeline {
         }
         stage('JIRA') {
             steps {
-                def serverInfo = jiraGetServerInfo()
+                serverInfo = jiraGetServerInfo()
                 echo serverInfo.data.toString()
             }
         }
