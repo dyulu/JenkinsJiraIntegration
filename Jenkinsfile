@@ -53,7 +53,7 @@ pipeline {
                     //addJiraComment(${issues}, ${tag})
                     //comment = [ body: 'My test comment' ]
                     //jiraAddComment idOrKey: 'PE-1', input: comment
-                    jiraAddComment idOrKey: 'PE-1', input: ${BUILD_NUMBER}
+                    jiraAddComment idOrKey: 'PE-1', input: BUILD_NUMBER
                 }
             }
         }
