@@ -19,7 +19,8 @@ pipeline {
     //agent { dockerfile true }
     
     parameters {
-            string(name: 'tag', defaultValue: '')
+        string(name: 'issues', defaultValue: 'PE-0')
+        string(name: 'tag', defaultValue: 'release/0.0.0')
     }
     
     stages {
@@ -47,6 +48,8 @@ pipeline {
         stage('JIRA') {
             steps {
                 script {
+                    echo "All Jira issues: ${env.issues}"
+                    echo "Tag: ${env.tag}"
                     serverInfo = jiraGetServerInfo()
                     echo serverInfo.data.toString()
                     addJiraComment(${env.issues}, ${env.tag})
