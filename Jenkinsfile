@@ -6,7 +6,7 @@ def shell(cmd) {
 @NonCPS // has to be NonCPS or the build breaks on the call to .each
 def addJiraComment(jiraIssues, comment) {
     jiraIssues.each { issue ->
-                      jiraAddComment idOrKey: $issue, input: comment
+        jiraAddComment idOrKey: ${issue}, input: comment
     }
 }
 
@@ -18,10 +18,10 @@ pipeline {
     //}
     //agent { dockerfile true }
     
-    parameters {
-        string(name: 'issues', defaultValue: 'PE-0')
-        string(name: 'tag', defaultValue: 'release/0.0.0')
-    }
+    //parameters {
+    //    string(name: 'issues', defaultValue: 'PE-0')
+    //    string(name: 'tag', defaultValue: 'release/0.0.0')
+    //}
     
     stages {
         stage('pre-build') {
@@ -36,23 +36,19 @@ pipeline {
                 echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
-                script {
-                    env.issues = shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2')
-                    env.tag = shell('git tag -l --points-at HEAD')
-                    echo "All Jira issues: ${params.issues}"
-                    echo "Tag: ${params.tag}"
-                }
                 //sh 'mvn --version'
             }
         }
         stage('JIRA') {
             steps {
                 script {
-                    echo "All Jira issues: ${params.issues}"
-                    echo "Tag: ${params.tag}"
+                    issues = shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2')
+                    tag = shell('git tag -l --points-at HEAD')
+                    echo "All Jira issues: ${issues}"
+                    echo "Tag: ${tag}"
                     serverInfo = jiraGetServerInfo()
                     echo serverInfo.data.toString()
-                    addJiraComment(${params.issues}, ${params.tag})
+                    addJiraComment(${issues}, ${tag})
                     //comment = [ body: 'My test comment' ]
                     //jiraAddComment idOrKey: 'PE-1', input: comment
                 }
