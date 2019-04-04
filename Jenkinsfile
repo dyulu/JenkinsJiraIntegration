@@ -1,3 +1,9 @@
+def shell(cmd) {
+    args.script = cmd
+    args.returnStdout = true
+    return sh(args).trim()
+}
+
 pipeline {
     agent any
     
@@ -20,8 +26,8 @@ pipeline {
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
                 script {
-                    issues = sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
-                    tag = sh 'git tag -l --points-at HEAD'
+                    issues = shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2')
+                    tag = shell('git tag -l --points-at HEAD')
                     echo "All Jira issues: $issues"
                     echo "Tag: $tag"
                 }
