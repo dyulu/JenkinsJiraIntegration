@@ -44,6 +44,8 @@ pipeline {
                 script {
                     issues = shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2')
                     tag = shell('git tag -l --points-at HEAD')
+                    sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
+                    sh 'git tag -l --points-at HEAD'
                     echo "All Jira issues: ${issues}"
                     echo "Tag: ${tag}"
                     serverInfo = jiraGetServerInfo()
