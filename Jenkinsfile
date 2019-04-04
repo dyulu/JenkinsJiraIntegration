@@ -1,7 +1,6 @@
 def shell(cmd) {
-    args.script = cmd
-    args.returnStdout = true
-    return sh(args).trim()
+    return sh(script: cmd,
+             returnStdout: true).trim()
 }
 
 pipeline {
