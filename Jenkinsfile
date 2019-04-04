@@ -19,7 +19,7 @@ pipeline {
     //agent { dockerfile true }
     
     parameters {
-        string(name: 'issues', defaultValue: 'PE-0'),
+        string(name: 'issues', defaultValue: 'PE-0')
         string(name: 'tag', defaultValue: 'release/0.0.0')
     }
     
@@ -39,8 +39,8 @@ pipeline {
                 script {
                     env.issues = shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2')
                     env.tag = shell('git tag -l --points-at HEAD')
-                    echo "All Jira issues: ${env.issues}"
-                    echo "Tag: ${env.tag}"
+                    echo "All Jira issues: ${params.issues}"
+                    echo "Tag: ${params.tag}"
                 }
                 //sh 'mvn --version'
             }
@@ -48,11 +48,11 @@ pipeline {
         stage('JIRA') {
             steps {
                 script {
-                    echo "All Jira issues: ${env.issues}"
-                    echo "Tag: ${env.tag}"
+                    echo "All Jira issues: ${params.issues}"
+                    echo "Tag: ${params.tag}"
                     serverInfo = jiraGetServerInfo()
                     echo serverInfo.data.toString()
-                    addJiraComment(${env.issues}, ${env.tag})
+                    addJiraComment(${params.issues}, ${params.tag})
                     //comment = [ body: 'My test comment' ]
                     //jiraAddComment idOrKey: 'PE-1', input: comment
                 }
