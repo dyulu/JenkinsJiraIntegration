@@ -10,7 +10,7 @@ pipeline {
             steps {
                 sh 'echo "Hello World!"'
                 sh 'echo $PATH'
-                sh 'ls -lart /usr/local/bin/'
+                //sh 'ls -lart /usr/local/bin/'
             }
         }
         stage('build') {
@@ -22,7 +22,7 @@ pipeline {
         stage('JIRA') {
             steps {
                 script {
-                    serverInfo = jiraGetServerInfo("TestJira")
+                    serverInfo = jiraGetServerInfo site : 'TestJira'
                     echo serverInfo.data.toString()
                 }
             }
