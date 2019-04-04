@@ -23,6 +23,8 @@ pipeline {
                 script {
                     serverInfo = jiraGetServerInfo site : 'TestJira'
                     echo serverInfo.data.toString()
+                    comment = [ body: 'test comment' ]
+                    jiraAddComment idOrKey: 'PE-1', input: comment, site: 'TestJira'
                 }
             }
         }
