@@ -19,7 +19,7 @@ pipeline {
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
                 echo "All commits:"
-                sh 'git log --oneline $GIT_COMMIT $GIT_PREVIOUS_COMMIT'
+                sh 'git log --oneline ${GIT_COMMIT}..${GIT_PREVIOUS_COMMIT}'
                 //sh 'mvn --version'
             }
         }
