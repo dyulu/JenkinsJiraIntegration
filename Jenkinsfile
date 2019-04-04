@@ -50,9 +50,10 @@ pipeline {
                     echo "Tag: ${tag}"
                     serverInfo = jiraGetServerInfo()
                     echo serverInfo.data.toString()
-                    addJiraComment(${issues}, ${tag})
+                    //addJiraComment(${issues}, ${tag})
                     //comment = [ body: 'My test comment' ]
                     //jiraAddComment idOrKey: 'PE-1', input: comment
+                    jiraAddComment idOrKey: issues, input: tag
                 }
             }
         }
