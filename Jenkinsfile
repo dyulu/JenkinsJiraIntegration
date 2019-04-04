@@ -18,8 +18,8 @@ pipeline {
                 sh 'echo "Build"'
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
-                echo "All commits:"
-                sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT}'
+                echo "All Jira issues:"
+                sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
                 //sh 'mvn --version'
             }
         }
