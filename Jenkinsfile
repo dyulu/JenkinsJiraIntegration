@@ -19,7 +19,7 @@ pipeline {
     //agent { dockerfile true }
     
     parameters {
-        string(name: 'issues', defaultValue: 'PE-0')
+        string(name: 'issues', defaultValue: 'PE-0'),
         string(name: 'tag', defaultValue: 'release/0.0.0')
     }
     
