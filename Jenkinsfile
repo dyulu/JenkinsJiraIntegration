@@ -22,7 +22,7 @@ pipeline {
         stage('JIRA') {
             steps {
                 script {
-                    serverInfo = jiraGetServerInfo()
+                    serverInfo = jiraGetServerInfo("TestJira")
                     echo serverInfo.data.toString()
                 }
             }
