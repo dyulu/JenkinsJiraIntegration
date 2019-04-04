@@ -21,10 +21,10 @@ pipeline {
         stage('JIRA') {
             steps {
                 script {
-                    serverInfo = jiraGetServerInfo site : 'TestJira'
+                    serverInfo = jiraGetServerInfo()
                     echo serverInfo.data.toString()
-                    comment = [ body: 'test comment' ]
-                    jiraAddComment idOrKey: 'PE-1', input: comment, site: 'TestJira'
+                    comment = [ body: 'My test comment' ]
+                    jiraAddComment idOrKey: 'PE-1', input: comment
                 }
             }
         }
