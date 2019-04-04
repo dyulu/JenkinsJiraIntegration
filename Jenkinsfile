@@ -19,8 +19,10 @@ pipeline {
                 echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
-                echo "All Jira issues:"
-                sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
+                issues = sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
+                tag = sh 'git tag -l --points-at HEAD'
+                echo "All Jira issues: $issues"
+                echo "Tag: $tag"
                 //sh 'mvn --version'
             }
         }
