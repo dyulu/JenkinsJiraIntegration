@@ -16,6 +16,7 @@ pipeline {
         stage('build') {
             steps {
                 sh 'echo "Build"'
+                echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
                 echo "All Jira issues:"
