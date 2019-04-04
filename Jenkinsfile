@@ -51,7 +51,7 @@ pipeline {
                     serverInfo = jiraGetServerInfo()
                     echo serverInfo.data.toString()
                     //addJiraComment(${issues}, ${tag})
-                    comment = [ body: ${BUILD_NUMBER} ]
+                    comment = [ body: "${BUILD_NUMBER}" ]
                     //jiraAddComment idOrKey: 'PE-1', input: comment
                     jiraAddComment idOrKey: 'PE-1', input: comment
                 }
