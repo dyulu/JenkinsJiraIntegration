@@ -4,7 +4,7 @@ def shell(cmd) {
 }
 
 def getIssues() {
-    return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2')
+    return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
 }
 
 def getTag() {
@@ -13,7 +13,8 @@ def getTag() {
 }
 
 @NonCPS // has to be NonCPS or the build breaks on the call to .each
-def addJiraComment(jiraIssues, comment) {
+def addJiraComment(jiraIssues, tag) {
+    comment = [ body: "Integrated into build: ${tag}" ]
     jiraIssues.each { issue ->
         jiraAddComment idOrKey: ${issue}, input: comment
     }
@@ -62,9 +63,9 @@ pipeline {
                 sh 'git tag -l --points-at HEAD'
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
-                //addJiraComment(${issues}, ${tag})
-                comment = [ body: "Integrated into build: ${tag}" ]
-                jiraAddComment idOrKey: 'PE-1', input: comment
+                addJiraComment(${issues}, ${tag})
+                //comment = [ body: "Integrated into build: ${tag}" ]
+                //jiraAddComment idOrKey: 'PE-1', input: comment
             }
         }
         unstable {
@@ -75,6 +76,7 @@ pipeline {
         }
         changed {
             echo "Build has changed"
+            echo "currentBuild.changeSets"
         }
     }
 }
