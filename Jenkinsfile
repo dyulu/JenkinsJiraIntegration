@@ -16,7 +16,7 @@ def getTag() {
 def addJiraComment(jiraIssues, tag) {
     comment = [ body: "Integrated into build: ${tag}" ]
     jiraIssues.each { issue ->
-        jiraAddComment idOrKey: ${issue}, input: comment
+        jiraAddComment idOrKey: issue, input: comment
     }
 }
 
@@ -59,11 +59,9 @@ pipeline {
             script {
                 issues = getIssues()
                 tag = getTag()
-                sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
-                sh 'git tag -l --points-at HEAD'
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
-                addJiraComment(${issues}, ${tag})
+                addJiraComment(issues, tag)
                 //comment = [ body: "Integrated into build: ${tag}" ]
                 //jiraAddComment idOrKey: 'PE-1', input: comment
             }
