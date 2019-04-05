@@ -82,7 +82,7 @@ pipeline {
         }
         changed {
             echo "Build has changed"
-            echo "currentBuild.changeSets"
+            echo "${currentBuild.changeSets}"
         }
     }
 }
