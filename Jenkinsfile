@@ -29,6 +29,19 @@ def resolveJiraIssue(jiraIssues) {
     }
 }
 
+def createJiraIssue(summary, description) {
+    newIssue = [fields: [ // id or key must present for project.
+                               project: [key: 'PE'],
+                               summary: summary,
+                               description: description,
+                               issuetype: [name: 'Bug']]]
+
+    response = jiraNewIssue issue: newIssue
+
+    echo response.successful.toString()
+    echo response.data.toString()
+}
+
 pipeline {
     agent any
     
@@ -55,7 +68,7 @@ pipeline {
                 echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
-                //sh 'mvn --version'
+                sh 'mvn --version'
             }
         }
     }
@@ -79,6 +92,7 @@ pipeline {
         }
         failure {
             echo "Build has failed"
+            createJiraIssue("Jenkins build failure", "Jenkins build failure)
         }
         changed {
             echo "Build has changed"
