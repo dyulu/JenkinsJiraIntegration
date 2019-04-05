@@ -92,7 +92,7 @@ pipeline {
         }
         failure {
             echo "Build has failed"
-            createJiraIssue("Jenkins build failure", "Jenkins build failure)
+            createJiraIssue("Jenkins build failure", "Jenkins build failure")
         }
         changed {
             echo "Build has changed"
