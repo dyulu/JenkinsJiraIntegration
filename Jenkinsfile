@@ -34,7 +34,10 @@ def createJiraIssue(summary, description) {
                                project: [key: 'PE'],
                                summary: summary,
                                description: description,
-                               issuetype: [name: 'Bug']]]
+                               issuetype: [name: 'Bug'],
+                               assignee: 'ptt'
+                         ]
+               ]
 
     response = jiraNewIssue issue: newIssue
 
@@ -92,7 +95,7 @@ pipeline {
         }
         failure {
             echo "Build has failed"
-            createJiraIssue("Jenkins build failure", "Jenkins build failure")
+            createJiraIssue("Jenkins and Jira integration for platform build: auto-created on build failure", "Jenkins build failure")
         }
         changed {
             echo "Build has changed"
