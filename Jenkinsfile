@@ -9,7 +9,8 @@ def getIssues() {
 
 def getTag() {
     // return shell('git tag -l --points-at HEAD')
-    return shell('git describe --tags')
+    // return shell('git describe --tags')
+    return "Release/11.3.67"
 }
 
 @NonCPS
