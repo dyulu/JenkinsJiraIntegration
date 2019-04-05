@@ -12,11 +12,19 @@ def getTag() {
     return shell('git describe --tags')
 }
 
-@NonCPS // has to be NonCPS or the build breaks on the call to .each
+@NonCPS
 def addJiraComment(jiraIssues, tag) {
     comment = [ body: "Integrated into build: ${tag}" ]
     jiraIssues.each { issue ->
         jiraAddComment idOrKey: issue, input: comment
+    }
+}
+
+@NonCPS
+def resolveJiraIssue(jiraIssues) {
+    transition = [ transition: [name: 'RESOLVED'] ]
+    jiraIssues.each { issue ->
+        jiraTransitionIssue idOrKey: issue, input: transition
     }
 }
 
@@ -56,15 +64,14 @@ pipeline {
         }
         success {
             echo "Build is successful"
-            script {
+            //script {
                 issues = getIssues()
                 tag = getTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 addJiraComment(issues, tag)
-                //comment = [ body: "Integrated into build: ${tag}" ]
-                //jiraAddComment idOrKey: 'PE-1', input: comment
-            }
+                resolveJiraIssue(issues)
+            //}
         }
         unstable {
             echo "Build is unstable"
