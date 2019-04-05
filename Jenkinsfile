@@ -22,7 +22,7 @@ def addJiraComment(jiraIssues, tag) {
 
 @NonCPS
 def resolveJiraIssue(jiraIssues) {
-    transition = [ transition: [id: '4'] ]
+    transition = [ transition: [id: '31'] ]
     jiraIssues.each { issue ->
         jiraTransitionIssue idOrKey: issue, input: transition
     }
