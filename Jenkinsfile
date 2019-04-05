@@ -3,6 +3,15 @@ def shell(cmd) {
              returnStdout: true).trim()
 }
 
+def getIssues() {
+    return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2')
+}
+
+def getTag() {
+    // return shell('git tag -l --points-at HEAD')
+    return shell('git describe --tags')
+}
+
 @NonCPS // has to be NonCPS or the build breaks on the call to .each
 def addJiraComment(jiraIssues, comment) {
     jiraIssues.each { issue ->
@@ -39,22 +48,34 @@ pipeline {
                 //sh 'mvn --version'
             }
         }
-        stage('JIRA') {
-            steps {
+        post {
+            always {
+                echo "Post actions:"
+            }
+            success {
+                echo "Build is successful"
                 script {
-                    issues = shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2')
-                    tag = shell('git tag -l --points-at HEAD')
+                    issues = getIssues()
+                    tag = getTag()
                     sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
                     sh 'git tag -l --points-at HEAD'
                     echo "All Jira issues: ${issues}"
                     echo "Tag: ${tag}"
-                    serverInfo = jiraGetServerInfo()
-                    echo serverInfo.data.toString()
+                    //serverInfo = jiraGetServerInfo()
+                    //echo serverInfo.data.toString()
                     //addJiraComment(${issues}, ${tag})
-                    comment = [ body: "${BUILD_NUMBER}" ]
-                    //jiraAddComment idOrKey: 'PE-1', input: comment
+                    comment = [ body: "Integrated into build: ${tag}" ]
                     jiraAddComment idOrKey: 'PE-1', input: comment
                 }
+            }
+            unstable {
+                echo "Build is unstable"
+            }
+            failure {
+                echo "Build has failed"
+            }
+            changed {
+                echo "Build has changed"
             }
         }
     }
