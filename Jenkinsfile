@@ -64,14 +64,14 @@ pipeline {
         }
         success {
             echo "Build is successful"
-            //script {
+            script {
                 issues = getIssues()
                 tag = getTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 addJiraComment(issues, tag)
                 resolveJiraIssue(issues)
-            //}
+            }
         }
         unstable {
             echo "Build is unstable"
