@@ -35,7 +35,7 @@ def createJiraIssue(summary, description) {
                                summary: summary,
                                description: description,
                                issuetype: [name: 'Bug'],
-                               assignee: 'ptt'
+                               assignee: [name: 'ptt']
                          ]
                ]
 
