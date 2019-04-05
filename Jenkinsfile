@@ -48,35 +48,33 @@ pipeline {
                 //sh 'mvn --version'
             }
         }
-        post {
-            always {
-                echo "Post actions:"
+    }
+    post {
+        always {
+            echo "Post actions:"
+        }
+        success {
+            echo "Build is successful"
+            script {
+                issues = getIssues()
+                tag = getTag()
+                sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
+                sh 'git tag -l --points-at HEAD'
+                echo "All Jira issues: ${issues}"
+                echo "Tag: ${tag}"
+                //addJiraComment(${issues}, ${tag})
+                comment = [ body: "Integrated into build: ${tag}" ]
+                jiraAddComment idOrKey: 'PE-1', input: comment
             }
-            success {
-                echo "Build is successful"
-                script {
-                    issues = getIssues()
-                    tag = getTag()
-                    sh 'git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2'
-                    sh 'git tag -l --points-at HEAD'
-                    echo "All Jira issues: ${issues}"
-                    echo "Tag: ${tag}"
-                    //serverInfo = jiraGetServerInfo()
-                    //echo serverInfo.data.toString()
-                    //addJiraComment(${issues}, ${tag})
-                    comment = [ body: "Integrated into build: ${tag}" ]
-                    jiraAddComment idOrKey: 'PE-1', input: comment
-                }
-            }
-            unstable {
-                echo "Build is unstable"
-            }
-            failure {
-                echo "Build has failed"
-            }
-            changed {
-                echo "Build has changed"
-            }
+        }
+        unstable {
+            echo "Build is unstable"
+        }
+        failure {
+            echo "Build has failed"
+        }
+        changed {
+            echo "Build has changed"
         }
     }
 }
