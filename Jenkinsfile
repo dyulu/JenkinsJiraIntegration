@@ -117,6 +117,7 @@ pipeline {
     post {
         always {
             echo "Post actions:"
+            echo "getChangeString(${currentBuild.changeSets})"
         }
         success {
             echo "Build is successful"
@@ -138,8 +139,7 @@ pipeline {
             //createJiraIssue("Jenkins and Jira integration for platform build: auto-created on build failure", "Jenkins build failure")
         }
         changed {
-            echo "Build has changed"
-            echo "getChangeString(${currentBuild.changeSets})"
+            echo "Build completion status has changed"
         }
     }
 }
