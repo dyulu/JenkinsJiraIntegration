@@ -10,14 +10,16 @@ def getIssues() {
 def getTag() {
     // return shell('git tag -l --points-at HEAD')
     // return shell('git describe --tags')
-    return "Release/11.3.67"
+    return "11.3.67"
 }
 
 @NonCPS
 def addJiraComment(jiraIssues, tag) {
     comment = [ body: "Integrated into build: ${tag}" ]
     jiraIssues.each { issue ->
-        jiraAddComment idOrKey: issue, input: comment
+        response = jiraAddComment idOrKey: issue, input: comment
+        echo response.successful.toString()
+        echo response.data.toString()
     }
 }
 
@@ -25,7 +27,23 @@ def addJiraComment(jiraIssues, tag) {
 def resolveJiraIssue(jiraIssues) {
     transition = [ transition: [id: '31'] ]
     jiraIssues.each { issue ->
-        jiraTransitionIssue idOrKey: issue, input: transition
+        response = jiraTransitionIssue idOrKey: issue, input: transition
+        echo response.successful.toString()
+        echo response.data.toString()
+    }
+}
+
+def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
+    modIssue = [fields: [ // id or key must present for project.
+                               project: [key: 'PE'],
+                               custom_field_10007: releaseTag
+                         ]
+               ]
+
+    jiraIssues.each { issue ->
+        response = jiraEditIssue idOrKey: issue, issue: modIssue
+        echo response.successful.toString()
+        echo response.data.toString()
     }
 }
 
@@ -87,6 +105,7 @@ pipeline {
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 addJiraComment(issues, tag)
+                addReleaseTagToJiraIssue(issues, tag)
                 resolveJiraIssue(issues)
             }
         }
