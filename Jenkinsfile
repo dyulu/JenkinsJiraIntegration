@@ -36,8 +36,8 @@ def resolveJiraIssue(jiraIssues) {
 def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
     modIssue = [fields: [ // id or key must present for project.
                                project: [key: 'PE'],
-                               customfield_10007: ['${releaseTag}'],
-                               customfield_10008: ['11.3.0.14175']
+                               customfield_10007: ["${releaseTag}"],
+                               customfield_10008: ['11.3.0.14176']
                          ]
                ]
 
