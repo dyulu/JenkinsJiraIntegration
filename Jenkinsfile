@@ -4,7 +4,8 @@ def shell(cmd) {
 }
 
 def getIssues() {
-    return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
+    //return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
+    return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | grep -oE "([a-zA-Z][a-zA-Z0-9_]+-[1-9][0-9]*)([^.]|\.[^0-9]|\.$|$)"').split('\n')
 }
 
 def getTag() {
@@ -37,7 +38,7 @@ def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
     modIssue = [fields: [ // id or key must present for project.
                                project: [key: 'PE'],
                                customfield_10007: ["${releaseTag}"],
-                               customfield_10008: ['11.3.0.14176']
+                               customfield_10008: ['11.3.0.14175']
                          ]
                ]
 
