@@ -89,7 +89,7 @@ pipeline {
                 echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
-                sh 'mvn --version'
+                //sh 'mvn --version'
             }
         }
     }
