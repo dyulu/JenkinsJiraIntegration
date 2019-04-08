@@ -64,7 +64,6 @@ def createJiraIssue(summary, description) {
     echo response.data.toString()
 }
 
-
 pipeline {
     agent any
     
