@@ -5,7 +5,7 @@ def shell(cmd) {
 
 def getIssues() {
     //return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
-    return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | grep -oE "([a-zA-Z][a-zA-Z0-9_]+-[1-9][0-9]*)([^.]|\.[^0-9]|\.$|$)"').split('\n')
+    return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | grep -oE "([A-Z]+-[1-9][0-9]*)"').split('\n')
 }
 
 def getTag() {
