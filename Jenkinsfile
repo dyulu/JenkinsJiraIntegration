@@ -14,9 +14,10 @@ def getTag() {
     return "11.3.67"
 }
 
-@NonCPS
-def addJiraComment(jiraIssues, tag) {
-    comment = [ body: "Integrated into build: ${tag}" ]
+//@NonCPS
+def addJiraComment(jiraIssues, releaseTag) {
+    comment = [ body: "Integrated into build: ${releaseTag}" ]
+    
     jiraIssues.each { issue ->
         response = jiraAddComment idOrKey: issue, input: comment
         echo response.successful.toString()
@@ -24,9 +25,9 @@ def addJiraComment(jiraIssues, tag) {
     }
 }
 
-@NonCPS
 def resolveJiraIssue(jiraIssues) {
     transition = [ transition: [id: '31'] ]
+    
     jiraIssues.each { issue ->
         response = jiraTransitionIssue idOrKey: issue, input: transition
         echo response.successful.toString()
@@ -60,7 +61,6 @@ def createJiraIssue(summary, description) {
                ]
 
     response = jiraNewIssue issue: newIssue
-
     echo response.successful.toString()
     echo response.data.toString()
 }
