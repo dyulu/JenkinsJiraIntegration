@@ -36,7 +36,7 @@ def resolveJiraIssue(jiraIssues) {
 def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
     modIssue = [fields: [ // id or key must present for project.
                                project: [key: 'PE'],
-                               custom_field_10007: releaseTag
+                               customfield_10007: releaseTag
                          ]
                ]
 
@@ -114,7 +114,7 @@ pipeline {
         }
         failure {
             echo "Build has failed"
-            createJiraIssue("Jenkins and Jira integration for platform build: auto-created on build failure", "Jenkins build failure")
+            //createJiraIssue("Jenkins and Jira integration for platform build: auto-created on build failure", "Jenkins build failure")
         }
         changed {
             echo "Build has changed"
