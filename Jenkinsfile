@@ -67,10 +67,11 @@ def createJiraIssue(summary, description) {
 
 def getJiraIssuesInBuild(buildNo) {
     //def issues = jiraJqlSearch jql: "customfield_10007 = ${buildNo}"
-    def issues = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
-    issues.data.each { issue ->
+    def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
+    reponse.data.each { issue ->
         echo issue.getKey()
     }
+    echo reponse.data.toString()
     return issues
 }
 
@@ -133,8 +134,8 @@ pipeline {
         always {
             echo "Post actions:"
             script {
-                //changes = getChangeString(currentBuild.changeSets)
-                echo "changes"
+                changes = getChangeString(currentBuild.changeSets)
+                echo changes
             }
         }
         success {
