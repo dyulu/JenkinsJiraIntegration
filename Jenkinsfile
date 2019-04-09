@@ -65,6 +65,12 @@ def createJiraIssue(summary, description) {
     echo response.data.toString()
 }
 
+def getJiraIssuesInBuild(buildNo) {
+    def issues = jiraJqlSearch jql: "customfield_10007 = ${buildNo}"
+    echo issues.data.toString()
+    return issues
+}
+
 @NonCPS
 def getChangeString(changeLogSets) {
     MAX_MSG_LEN = 100
@@ -111,13 +117,15 @@ pipeline {
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
                 // sh 'mvn --version'
+                getJiraIssuesInBuild('11.3.67')
             }
         }
     }
     post {
         always {
             echo "Post actions:"
-            echo "getChangeString(${currentBuild.changeSets})"
+            changes = getChangeString(${currentBuild.changeSets})
+            echo changes
         }
         success {
             echo "Build is successful"
@@ -126,9 +134,9 @@ pipeline {
                 tag = getTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
-                addJiraComment(issues, tag)
-                addReleaseTagToJiraIssue(issues, tag)
-                resolveJiraIssue(issues)
+                //addJiraComment(issues, tag)
+                //addReleaseTagToJiraIssue(issues, tag)
+                //resolveJiraIssue(issues)
             }
         }
         unstable {
