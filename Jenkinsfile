@@ -68,7 +68,8 @@ def createJiraIssue(summary, description) {
 def getJiraIssuesInBuild(buildNo) {
     //def issues = jiraJqlSearch jql: "customfield_10007 = ${buildNo}"
     def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
-    reponse.data.each { issue ->
+    echo "total: ${reponse.data.total}"
+    reponse.data.issues.each { issue ->
         echo issue.getKey()
     }
     echo reponse.data.toString()
