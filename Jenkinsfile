@@ -1,6 +1,5 @@
 def shell(cmd) {
-    return sh(script: cmd,
-             returnStdout: true).trim()
+    return sh(script: cmd, returnStdout: true).trim()
 }
 
 def getIssues() {
@@ -66,8 +65,8 @@ def createJiraIssue(summary, description) {
 }
 
 def getJiraIssuesInBuild(buildNo) {
-    //def issues = jiraJqlSearch jql: "customfield_10007 = ${buildNo}"
-    def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
+    def issues = jiraJqlSearch jql: "PROJECT = PE AND customfield_10007 = ${buildNo}"
+    //def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
     echo "total: ${reponse.data.total}"
     reponse.data.issues.each { issue ->
         echo issue.key
@@ -165,11 +164,11 @@ pipeline {
         always {
             echo "Post actions:"
             script {
-                echo branchForBuild(currentBuild)
-                changes = getChangeString(currentBuild.changeSets)
-                echo changes
-                commits = getCommits()
-                
+                //echo branchForBuild(currentBuild)
+                //changes = getChangeString(currentBuild.changeSets)
+                //echo changes
+                //commits = getCommits()
+                echo CHANGES_SINCE_LAST_SUCCESS
             }
         }
         success {
