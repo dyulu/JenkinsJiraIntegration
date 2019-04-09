@@ -67,9 +67,16 @@ def createJiraIssue(summary, description) {
 
 def getJiraIssuesInBuild(buildNo) {
     //def issues = jiraJqlSearch jql: "customfield_10007 = ${buildNo}"
-    def issues = jiraJqlSearch jql: 'PROJECT = PE'
-    echo issues.data.toString()
+    def issues = jiraJqlSearch jql: 'PROJECT = PE AND type = bug'
+    issues.each { issue ->
+        echo response.data.getKey()
+    }
     return issues
+}
+
+def getJiraIssueReporter(issueKey) {
+    def issue = jiraGetIssue idOrKey: issueKey
+    echo issue.data.jiraGetReporter()
 }
 
 @NonCPS
@@ -126,7 +133,7 @@ pipeline {
         always {
             echo "Post actions:"
             script {
-                changes = getChangeString(${currentBuild.changeSets})
+                changes = getChangeString(currentBuild.changeSets)
                 echo changes
             }
         }
