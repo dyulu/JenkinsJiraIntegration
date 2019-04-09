@@ -100,6 +100,36 @@ def getChangeString(changeLogSets) {
     return changeString
 }
 
+@NonCPS
+def branchForBuild( build ) {
+  def scmAction = build?.actions.find { action -> action instanceof jenkins.scm.api.SCMRevisionAction }
+  return scmAction?.revision?.head?.getName()
+}
+
+@NonCPS
+def commitHashForBuild( build ) {
+  def scmAction = build?.actions.find { action -> action instanceof jenkins.scm.api.SCMRevisionAction }
+  return scmAction?.revision?.hash
+}
+
+def getLastSuccessfulCommit() {
+  def lastSuccessfulHash = null
+  def lastSuccessfulBuild = currentBuild.rawBuild.getPreviousSuccessfulBuild()
+  if ( lastSuccessfulBuild ) {
+    lastSuccessfulHash = commitHashForBuild( lastSuccessfulBuild )
+  }
+  return lastSuccessfulHash
+}
+
+def getCommits() {
+      def lastSuccessfulCommit = getLastSuccessfulCommit()
+      def currentCommit = commitHashForBuild( currentBuild.rawBuild )
+      if (lastSuccessfulCommit) {
+          commits = shell("git rev-list $currentCommit \"^$lastSuccessfulCommit\"").split('\n')
+          echo commits
+      }
+}
+    
 pipeline {
     agent any
     
@@ -135,8 +165,11 @@ pipeline {
         always {
             echo "Post actions:"
             script {
+                echo branchForBuild(currentBuild)
                 changes = getChangeString(currentBuild.changeSets)
                 echo changes
+                commits = getCommits()
+                
             }
         }
         success {
