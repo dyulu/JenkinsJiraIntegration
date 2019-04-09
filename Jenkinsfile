@@ -70,9 +70,9 @@ def getJiraIssuesInBuild(buildNo) {
     def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
     echo "total: ${reponse.data.total}"
     reponse.data.issues.each { issue ->
-        echo issue.getKey()
+        echo issue.key
     }
-    echo reponse.data.toString()
+    //echo reponse.data.toString()
     return issues
 }
 
