@@ -66,7 +66,8 @@ def createJiraIssue(summary, description) {
 }
 
 def getJiraIssuesInBuild(buildNo) {
-    def issues = jiraJqlSearch jql: "customfield_10007 = ${buildNo}"
+    //def issues = jiraJqlSearch jql: "customfield_10007 = ${buildNo}"
+    def issues = jiraJqlSearch jql: 'PROJECT = PE'
     echo issues.data.toString()
     return issues
 }
