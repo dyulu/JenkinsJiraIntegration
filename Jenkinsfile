@@ -134,7 +134,7 @@ pipeline {
             echo "Post actions:"
             script {
                 //changes = getChangeString(currentBuild.changeSets)
-                //echo changes
+                echo "changes"
             }
         }
         success {
