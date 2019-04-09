@@ -124,8 +124,10 @@ pipeline {
     post {
         always {
             echo "Post actions:"
-            changes = getChangeString(${currentBuild.changeSets})
-            echo changes
+            script {
+                changes = getChangeString(${currentBuild.changeSets})
+                echo changes
+            }
         }
         success {
             echo "Build is successful"
