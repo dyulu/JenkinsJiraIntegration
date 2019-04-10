@@ -21,19 +21,51 @@ def addJiraComment(jiraIssues, releaseTag) {
     
     jiraIssues.each { issue ->
         response = jiraAddComment idOrKey: issue, input: comment
-        echo response.successful.toString()
+        if (!response.successful) {
+            echo response.error
+            return false
+        }
         echo response.data.toString()
     }
+
+    return true
 }
 
 def resolveJiraIssue(jiraIssues) {
     transition = [ transition: [id: '31'] ]
-    
+
     jiraIssues.each { issue ->
         response = jiraTransitionIssue idOrKey: issue, input: transition
-        echo response.successful.toString()
+        if (!response.successful) {
+            echo response.error
+            return false
+        }
         echo response.data.toString()
+        
+        reponse = jiraGetIssue idOrKey: issue
+        if (!response.successful) {
+            echo response.error
+            return false
+        }
+        echo response.data.toString()
+        
+        if (reponse.data.jiraGetType() == Bug) {
+            reporter = reponse.data.jiraGetReporter()
+            modIssue = [fields: [ // id or key must present for project.
+                                 project: [key: 'PE'],
+                                 assignee: [reporter]
+                                ]
+                       ]
+            reponse = jiraEditIssue idOrKey: issue, issue: modIssue
+            if (!response.successful) {
+                echo response.error
+                return false
+            }
+            echo response.data.toString()
+        }
     }
+    
+    return true
 }
 
 def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
@@ -46,9 +78,14 @@ def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
 
     jiraIssues.each { issue ->
         response = jiraEditIssue idOrKey: issue, issue: modIssue
-        echo response.successful.toString()
-        echo response.data.toString()
+        if (!response.successful) {
+            echo response.error
+            return false
+        }
     }
+    
+    echo response.data.toString()
+    return true
 }
 
 def createJiraIssue(summary, description) {
@@ -62,13 +99,18 @@ def createJiraIssue(summary, description) {
                ]
 
     response = jiraNewIssue issue: newIssue
-    echo response.successful.toString()
+    if (!response.successful) {
+            echo response.error
+            return false
+    }
+
     echo response.data.toString()
+    return true
 }
 
 def getJiraIssuesInBuild(buildNo) {
-    def response = jiraJqlSearch jql: "PROJECT = PE AND customfield_10007 = ${buildNo}"
-    //def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
+    response = jiraJqlSearch jql: "PROJECT = PE AND customfield_10007 = ${buildNo}"
+    //reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
     issues = []
     if (response.successful) {
         echo "total: ${reponse.data.total}"
@@ -77,7 +119,10 @@ def getJiraIssuesInBuild(buildNo) {
             issues.add(issue.key)
         }
     }
-    echo issues.toString()
+    else {
+        echo response.error
+    }
+
     return issues
 }
 
