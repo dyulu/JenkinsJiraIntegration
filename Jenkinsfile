@@ -82,9 +82,9 @@ def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
             echo response.error
             status = false
         }
+        echo response.data.toString()
     }
     
-    echo response.data.toString()
     return status
 }
 
@@ -197,7 +197,7 @@ pipeline {
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 def status = addJiraComment(issues, tag)
-                //status = status | addReleaseTagToJiraIssue(issues, tag)
+                status = status | addReleaseTagToJiraIssue(issues, tag)
                 //status = status | resolveJiraIssue(issues)
                 //echo status.toString()
                 if (status != true) {
