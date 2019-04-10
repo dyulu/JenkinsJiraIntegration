@@ -129,10 +129,11 @@ pipeline {
                 echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_SUCCESSFUL_COMMIT"
-                def list = ["a", "b", "c", "a", "b", "c"]
-                echo list.unique()
+                
                 // sh 'mvn --version'
                 script {
+                    def list = ["a", "b", "c", "a", "b", "c"]
+                    echo list.unique()
                     issues = getIssues()
                     echo "All Jira issues: ${issues}"
                 }
