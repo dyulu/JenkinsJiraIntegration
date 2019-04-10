@@ -22,12 +22,12 @@ def addJiraComment(jiraIssues, releaseTag) {
     jiraIssues.each { issue ->
         def response = jiraAddComment idOrKey: issue, input: comment
         if (!response.successful) {
-            echo response.error
+            echo "ERROR: " + response.error
             return false
         }
         echo response.data.toString()
     }
-
+    echo "True"
     return true
 }
 
