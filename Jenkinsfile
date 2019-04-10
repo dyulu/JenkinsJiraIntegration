@@ -168,6 +168,7 @@ pipeline {
                     addReleaseTagToJiraIssue(issues, tag)
                     resolveJiraIssue(issues)
                 } catch (error) {
+                    echo "caught error doing Jira stuff"
                     echo error
                     // sendMail
                 }
