@@ -75,7 +75,7 @@ def getJiraIssuesInBuild(buildNo) {
         echo issue.key
         issues.add(issue.key)
     }
-    echo issues
+    echo issues.toString()
     return issues
 }
 
@@ -133,8 +133,8 @@ pipeline {
                 
                 // sh 'mvn --version'
                 script {
-                    def list = ["a", "b", "c", "a", "b", "c"]
-                    echo list.unique().toString()
+                    //def list = ["a", "b", "c", "a", "b", "c"]
+                    //echo list.unique().toString()
                     issues = getIssues()
                     echo "All Jira issues: ${issues}"
                 }
