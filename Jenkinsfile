@@ -139,7 +139,8 @@ pipeline {
                     try {
                         getJiraIssuesInBuild('11.3.67')
                     } catch (error) {
-                        echo error
+                        echo "caught error when doing getJiraIssuesInBuild"
+                        echo error.toString()
                         // sendMail
                     }
                 }
