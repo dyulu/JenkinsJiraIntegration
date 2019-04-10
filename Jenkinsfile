@@ -47,13 +47,11 @@ def resolveJiraIssue(jiraIssues) {
             echo response.error
             status = false
         }
-        echo response.data.toString()
-        
-        if (reponse.data?.jiraGetType() == Bug) {
-            def reporter = reponse.data.jiraGetReporter()
+        else if (reponse.data && reponse.data.getIssueType().getName() == 'Bug') {
+            def reporter = reponse.data.getReporter()
             modIssue = [fields: [ // id or key must present for project.
                                  project: [key: 'PE'],
-                                 assignee: [reporter]
+                                 assignee: reporter
                                 ]
                        ]
             reponse = jiraEditIssue idOrKey: issue, issue: modIssue
