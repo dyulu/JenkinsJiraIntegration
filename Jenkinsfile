@@ -5,7 +5,7 @@ def shell(cmd) {
 def getIssues() {
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
     def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([A-Z]+-[1-9][0-9]*)"').split('\n')
-    echo "Original issues: ${issues}
+    echo "Original issues: ${issues}"
     return issues.toList().unique()
 }
 
