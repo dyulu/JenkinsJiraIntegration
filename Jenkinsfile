@@ -121,7 +121,7 @@ pipeline {
             }
         }
         stage('build') {
-            steps {
+            script {
                 echo "Build"
                 echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
