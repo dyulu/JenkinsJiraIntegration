@@ -135,12 +135,13 @@ pipeline {
                 script {
                     issues = getIssues()
                     echo "All Jira issues: ${issues}"
-                }
-                try {
-                    getJiraIssuesInBuild('11.3.67')
-                } catch (error) {
-                    echo error
-                    // sendMail
+
+                    try {
+                        getJiraIssuesInBuild('11.3.67')
+                    } catch (error) {
+                        echo error
+                        // sendMail
+                    }
                 }
             }
         }
