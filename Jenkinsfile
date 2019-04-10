@@ -109,10 +109,10 @@ def createJiraIssue(summary, description) {
 def getJiraIssuesInBuild(buildNo) {
     def response = jiraJqlSearch jql: "PROJECT = PE AND cf[10007] = ${buildNo}"
     //def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
+    echo "total: ${reponse.data.total}"
     echo response.data.toString()
     def issues = []
-    if (response.successful) {
-        echo "total: ${reponse.data.total}"
+    if (response.successful && reponse.data.total > 0) {
         reponse.data.issues.each { issue ->
             echo issue.key
             issues.add(issue.key)
