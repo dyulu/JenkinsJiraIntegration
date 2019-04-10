@@ -3,8 +3,8 @@ def shell(cmd) {
 }
 
 def getIssues() {
-    //return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
-    return shell('git log --oneline ${GIT_PREVIOUS_COMMIT}..${GIT_COMMIT} | grep -oE "([A-Z]+-[1-9][0-9]*)"').split('\n')
+    //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
+    return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([A-Z]+-[1-9][0-9]*)"').split('\n')
 }
 
 def getTag() {
@@ -115,16 +115,17 @@ pipeline {
     stages {
         stage('pre-build') {
             steps {
-                sh 'echo "Hello World!"'
-                sh 'echo $PATH'
+                echo "Hello World!"
+                shell('echo $PATH')
+                shell('printenv')
             }
         }
         stage('build') {
             steps {
-                sh 'echo "Build"'
+                echo "Build"
                 echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
-                echo "Commit for previous successful build: $GIT_PREVIOUS_COMMIT"
+                echo "Commit for previous successful build: $GIT_PREVIOUS_SUCCESSFUL_COMMIT"
                 // sh 'mvn --version'
                 getJiraIssuesInBuild('11.3.67')
             }
