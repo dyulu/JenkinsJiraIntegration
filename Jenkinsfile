@@ -42,19 +42,20 @@ def resolveJiraIssue(jiraIssues) {
         }
         echo response.data.toString()
         
-        reponse = jiraGetIssue idOrKey: issue
+        response = jiraGetIssue idOrKey: issue
+        echo response.data.toString()
         if (!response.successful) {
             echo response.error
             status = false
         }
-        else if (reponse.data && reponse.data.getIssueType().getName() == 'Bug') {
-            def reporter = reponse.data.getReporter()
+        else if (response.data && response.data.getIssueType().getName() == 'Bug') {
+            def reporter = response.data.getReporter()
             modIssue = [fields: [ // id or key must present for project.
                                  project: [key: 'PE'],
                                  assignee: reporter
                                 ]
                        ]
-            reponse = jiraEditIssue idOrKey: issue, issue: modIssue
+            response = jiraEditIssue idOrKey: issue, issue: modIssue
             if (!response.successful) {
                 echo response.error
                 status = false
