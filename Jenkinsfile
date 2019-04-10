@@ -119,9 +119,9 @@ pipeline {
     stages {
         stage('pre-build') {
             steps {
-                echo "Hello World!"
+                echo "pre-build!"
                 echo PATH
-                shell('printenv')
+                sh('printenv')
             }
         }
         stage('build') {
@@ -133,8 +133,6 @@ pipeline {
                 
                 // sh 'mvn --version'
                 script {
-                    //def list = ["a", "b", "c", "a", "b", "c"]
-                    //echo list.unique().toString()
                     issues = getIssues()
                     echo "All Jira issues: ${issues}"
                 }
