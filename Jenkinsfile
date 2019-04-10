@@ -17,10 +17,10 @@ def getReleaseTag() {
 
 //@NonCPS
 def addJiraComment(jiraIssues, releaseTag) {
-    comment = [ body: "Integrated into build: ${releaseTag}" ]
+    def comment = [ body: "Integrated into build: ${releaseTag}" ]
     
     jiraIssues.each { issue ->
-        response = jiraAddComment idOrKey: issue, input: comment
+        def response = jiraAddComment idOrKey: issue, input: comment
         if (!response.successful) {
             echo response.error
             return false
@@ -32,10 +32,10 @@ def addJiraComment(jiraIssues, releaseTag) {
 }
 
 def resolveJiraIssue(jiraIssues) {
-    transition = [ transition: [id: '31'] ]
+    def transition = [ transition: [id: '31'] ]
 
     jiraIssues.each { issue ->
-        response = jiraTransitionIssue idOrKey: issue, input: transition
+        def response = jiraTransitionIssue idOrKey: issue, input: transition
         if (!response.successful) {
             echo response.error
             return false
@@ -50,7 +50,7 @@ def resolveJiraIssue(jiraIssues) {
         echo response.data.toString()
         
         if (reponse.data.jiraGetType() == Bug) {
-            reporter = reponse.data.jiraGetReporter()
+            def reporter = reponse.data.jiraGetReporter()
             modIssue = [fields: [ // id or key must present for project.
                                  project: [key: 'PE'],
                                  assignee: [reporter]
@@ -69,15 +69,15 @@ def resolveJiraIssue(jiraIssues) {
 }
 
 def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
-    modIssue = [fields: [ // id or key must present for project.
+    def modIssue = [fields: [ // id or key must present for project.
                                project: [key: 'PE'],
                                customfield_10007: ["${releaseTag}"],
                                customfield_10008: ['11.3.0.14175']
-                         ]
-               ]
+                            ]
+                  ]
 
     jiraIssues.each { issue ->
-        response = jiraEditIssue idOrKey: issue, issue: modIssue
+        def response = jiraEditIssue idOrKey: issue, issue: modIssue
         if (!response.successful) {
             echo response.error
             return false
@@ -89,16 +89,16 @@ def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
 }
 
 def createJiraIssue(summary, description) {
-    newIssue = [fields: [ // id or key must present for project.
+    def newIssue = [fields: [ // id or key must present for project.
                                project: [key: 'PE'],
                                summary: summary,
                                description: description,
                                issuetype: [name: 'Bug'],
                                assignee: [name: 'ptt']
-                         ]
-               ]
+                            ]
+                  ]
 
-    response = jiraNewIssue issue: newIssue
+    def response = jiraNewIssue issue: newIssue
     if (!response.successful) {
             echo response.error
             return false
@@ -109,9 +109,9 @@ def createJiraIssue(summary, description) {
 }
 
 def getJiraIssuesInBuild(buildNo) {
-    response = jiraJqlSearch jql: "PROJECT = PE AND customfield_10007 = ${buildNo}"
-    //reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
-    issues = []
+    def response = jiraJqlSearch jql: "PROJECT = PE AND customfield_10007 = ${buildNo}"
+    //def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
+    def issues = []
     if (response.successful) {
         echo "total: ${reponse.data.total}"
         reponse.data.issues.each { issue ->
@@ -197,8 +197,11 @@ pipeline {
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 def status = addJiraComment(issues, tag)
+                echo status
                 status |= addReleaseTagToJiraIssue(issues, tag)
+                echo status
                 status |= resolveJiraIssue(issues)
+                echo status
                 if (!status) {
                     echo "Failed doing Jira stuff, sending e-mail"
                     // sendMail, issues, tag
