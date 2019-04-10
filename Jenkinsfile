@@ -197,9 +197,7 @@ pipeline {
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 def status = addJiraComment(issues, tag)
-                echo status.toString()
                 status |= addReleaseTagToJiraIssue(issues, tag)
-                echo status.toString()
                 status |= resolveJiraIssue(issues)
                 echo status.toString()
                 if (status != true) {
