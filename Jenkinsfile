@@ -175,13 +175,8 @@ pipeline {
                 echo "Build:"        
                 // sh 'mvn --version'
                 script {
-                    try {
-                        def issues = getJiraIssuesInBuild('11.3.67')
-                        echo issues.toString()
-                    } catch (error) {
-                        echo "Caught error when doing getJiraIssuesInBuild:" + error.toString()
-                        // sendMail
-                    }
+                    def issues = getJiraIssuesInBuild('11.3.67')
+                    echo issues.toString()
                 }
             }
         }
@@ -197,16 +192,15 @@ pipeline {
         success {
             echo "Build is successful"
             script {
-                issues = getJiraIssuesFromCommits()
-                tag = getReleaseTag()
+                def issues = getJiraIssuesFromCommits()
+                def tag = getReleaseTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
-                try {
-                    addJiraComment(issues, tag)
-                    addReleaseTagToJiraIssue(issues, tag)
-                    resolveJiraIssue(issues)
-                } catch (error) {
-                    echo "Caught error doing Jira stuff" + error.toString()
+                def status = addJiraComment(issues, tag)
+                status |= addReleaseTagToJiraIssue(issues, tag)
+                status |= resolveJiraIssue(issues)
+                if (!status) {
+                    echo "Failed doing Jira stuff, sending e-mail"
                     // sendMail, issues, tag
                 }
             }
