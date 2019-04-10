@@ -49,7 +49,7 @@ def resolveJiraIssue(jiraIssues) {
         }
         echo response.data.toString()
         
-        if (reponse.data.jiraGetType() == Bug) {
+        if (reponse.data?.jiraGetType() == Bug) {
             def reporter = reponse.data.jiraGetReporter()
             modIssue = [fields: [ // id or key must present for project.
                                  project: [key: 'PE'],
