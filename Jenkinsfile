@@ -136,7 +136,12 @@ pipeline {
                     issues = getIssues()
                     echo "All Jira issues: ${issues}"
                 }
-                getJiraIssuesInBuild('11.3.67')
+                try {
+                    getJiraIssuesInBuild('11.3.67')
+                } catch (error) {
+                    echo error
+                    // sendMail
+                }
             }
         }
     }
@@ -156,9 +161,14 @@ pipeline {
                 tag = getTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
-                //addJiraComment(issues, tag)
-                //addReleaseTagToJiraIssue(issues, tag)
-                //resolveJiraIssue(issues)
+                try {
+                    addJiraComment(issues, tag)
+                    addReleaseTagToJiraIssue(issues, tag)
+                    resolveJiraIssue(issues)
+                } catch (error) {
+                    echo error
+                    // sendMail
+                }
             }
         }
         unstable {
