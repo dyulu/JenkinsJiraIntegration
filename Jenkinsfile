@@ -2,14 +2,14 @@ def shell(cmd) {
     return sh(script: cmd, returnStdout: true).trim()
 }
 
-def getIssues() {
+def getJiraIssuesFromCommits() {
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
     def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([A-Z]+-[1-9][0-9]*)"').split('\n')
     echo "Original issues: ${issues}"
     return issues.toList().unique()
 }
 
-def getTag() {
+def getReleaseTag() {
     // return shell('git tag -l --points-at HEAD')
     // return shell('git describe --tags')
     return "11.3.67"
@@ -133,7 +133,7 @@ pipeline {
                 
                 // sh 'mvn --version'
                 script {
-                    issues = getIssues()
+                    issues = getJiraIssuesFromCommits()
                     echo "All Jira issues: ${issues}"
 
                     try {
@@ -159,8 +159,8 @@ pipeline {
         success {
             echo "Build is successful"
             script {
-                issues = getIssues()
-                tag = getTag()
+                issues = getJiraIssuesFromCommits()
+                tag = getReleaseTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 try {
