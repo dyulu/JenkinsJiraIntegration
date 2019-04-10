@@ -113,7 +113,7 @@ def getJiraIssuesInBuild(buildNo) {
     def issues = []
     if (response.successful && response.data.total > 0) {
         echo "total: ${response.data.total}"
-        repsonse.data.issues.each { issue ->
+        response.data.issues.each { issue ->
             echo issue.key
             issues.add(issue.key)
         }
