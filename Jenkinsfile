@@ -4,7 +4,11 @@ def shell(cmd) {
 
 def getIssues() {
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
-    return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([A-Z]+-[1-9][0-9]*)"').split('\n')
+    def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([A-Z]+-[1-9][0-9]*)"').split('\n')
+    echo issues
+    issues = issues.unique(false)
+    echo issues
+    return issues
 }
 
 def getTag() {
@@ -65,13 +69,15 @@ def createJiraIssue(summary, description) {
 }
 
 def getJiraIssuesInBuild(buildNo) {
-    def issues = jiraJqlSearch jql: "PROJECT = PE AND customfield_10007 = ${buildNo}"
+    def response = jiraJqlSearch jql: "PROJECT = PE AND customfield_10007 = ${buildNo}"
     //def reponse = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
     echo "total: ${reponse.data.total}"
+    issues = []
     reponse.data.issues.each { issue ->
         echo issue.key
+        issues.add(issue.key)
     }
-    //echo reponse.data.toString()
+    echo issues
     return issues
 }
 
