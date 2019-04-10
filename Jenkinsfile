@@ -18,34 +18,34 @@ def getReleaseTag() {
 //@NonCPS
 def addJiraComment(jiraIssues, releaseTag) {
     def comment = [ body: "Integrated into build: ${releaseTag}" ]
-    
+    def status = true
     jiraIssues.each { issue ->
         def response = jiraAddComment idOrKey: issue, input: comment
         if (!response.successful) {
             echo "ERROR: " + response.error
-            return false
+            status = false
         }
         echo response.data.toString()
     }
-    echo "True"
-    return true
+    
+    return status
 }
 
 def resolveJiraIssue(jiraIssues) {
     def transition = [ transition: [id: '31'] ]
-
+    def status = true
     jiraIssues.each { issue ->
         def response = jiraTransitionIssue idOrKey: issue, input: transition
         if (!response.successful) {
             echo response.error
-            return false
+            status = false
         }
         echo response.data.toString()
         
         reponse = jiraGetIssue idOrKey: issue
         if (!response.successful) {
             echo response.error
-            return false
+            status = false
         }
         echo response.data.toString()
         
@@ -59,13 +59,13 @@ def resolveJiraIssue(jiraIssues) {
             reponse = jiraEditIssue idOrKey: issue, issue: modIssue
             if (!response.successful) {
                 echo response.error
-                return false
+                status = false
             }
             echo response.data.toString()
         }
     }
     
-    return true
+    return status
 }
 
 def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
@@ -75,17 +75,17 @@ def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
                                customfield_10008: ['11.3.0.14175']
                             ]
                   ]
-
+    def status = true
     jiraIssues.each { issue ->
         def response = jiraEditIssue idOrKey: issue, issue: modIssue
         if (!response.successful) {
             echo response.error
-            return false
+            status = false
         }
     }
     
     echo response.data.toString()
-    return true
+    return status
 }
 
 def createJiraIssue(summary, description) {
@@ -97,7 +97,7 @@ def createJiraIssue(summary, description) {
                                assignee: [name: 'ptt']
                             ]
                   ]
-
+    def status = true
     def response = jiraNewIssue issue: newIssue
     if (!response.successful) {
             echo response.error
@@ -105,7 +105,7 @@ def createJiraIssue(summary, description) {
     }
 
     echo response.data.toString()
-    return true
+    return status
 }
 
 def getJiraIssuesInBuild(buildNo) {
