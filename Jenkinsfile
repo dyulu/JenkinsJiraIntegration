@@ -121,14 +121,16 @@ pipeline {
             }
         }
         stage('build') {
-            script {
+            steps {
                 echo "Build"
                 echo "Git branch: $GIT_BRANCH"
                 echo "Commit for this build: $GIT_COMMIT"
                 echo "Commit for previous successful build: $GIT_PREVIOUS_SUCCESSFUL_COMMIT"
                 // sh 'mvn --version'
-                issues = getIssues()
-                echo "All Jira issues: ${issues}"
+                script {
+                    issues = getIssues()
+                    echo "All Jira issues: ${issues}"
+                }
                 getJiraIssuesInBuild('11.3.67')
             }
         }
