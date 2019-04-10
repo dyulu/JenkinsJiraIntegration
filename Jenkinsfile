@@ -133,7 +133,7 @@ pipeline {
                 // sh 'mvn --version'
                 script {
                     def list = ["a", "b", "c", "a", "b", "c"]
-                    echo list.unique()
+                    echo list.unique().tostring()
                     issues = getIssues()
                     echo "All Jira issues: ${issues}"
                 }
