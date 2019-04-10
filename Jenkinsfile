@@ -119,28 +119,20 @@ pipeline {
     stages {
         stage('pre-build') {
             steps {
-                echo "pre-build!"
-                echo PATH
-                sh('printenv')
+                echo "pre-build:"
+                sh('printenv | sort')
             }
         }
         stage('build') {
             steps {
-                echo "Build"
-                echo "Git branch: $GIT_BRANCH"
-                echo "Commit for this build: $GIT_COMMIT"
-                echo "Commit for previous successful build: $GIT_PREVIOUS_SUCCESSFUL_COMMIT"
-                
+                echo "Build:"        
                 // sh 'mvn --version'
                 script {
-                    issues = getJiraIssuesFromCommits()
-                    echo "All Jira issues: ${issues}"
-
                     try {
-                        getJiraIssuesInBuild('11.3.67')
+                        def issues = getJiraIssuesInBuild('11.3.67')
+                        echo issues.toString()
                     } catch (error) {
-                        echo "caught error when doing getJiraIssuesInBuild"
-                        echo error.toString()
+                        echo "Caught error when doing getJiraIssuesInBuild:" + error.toString()
                         // sendMail
                     }
                 }
@@ -153,7 +145,6 @@ pipeline {
             script {
                 changes = getChangeString(currentBuild.changeSets)
                 echo changes
-                //echo CHANGES_SINCE_LAST_SUCCESS
             }
         }
         success {
@@ -168,9 +159,8 @@ pipeline {
                     addReleaseTagToJiraIssue(issues, tag)
                     resolveJiraIssue(issues)
                 } catch (error) {
-                    echo "caught error doing Jira stuff"
-                    echo error
-                    // sendMail
+                    echo "Caught error doing Jira stuff" + error.toString()
+                    // sendMail, issues, tag
                 }
             }
         }
