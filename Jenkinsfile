@@ -36,7 +36,7 @@ def addJiraComment(jiraIssues, releaseTag) {
 
 def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
     def modIssue = [fields: [ // id or key must present for project.
-                               project: [key: 'PE'],
+                              // project: [key: 'PE'],
                                customfield_10007: ["${releaseTag}"],
                                customfield_10008: ['11.3.0.14175']
                             ]
@@ -74,7 +74,7 @@ def resolveJiraIssue(jiraIssues) {
         else if (response.data && response.data.fields.issuetype.name == 'Bug') {
             def reporter = response.data.fields.reporter
             modIssue = [fields: [ // id or key must present for project.
-                                 project: [key: 'PE'],
+                                  // project: [key: 'PE'],
                                  assignee: reporter
                                 ]
                        ]
@@ -99,7 +99,7 @@ def resolveJiraIssue(jiraIssues) {
 
 def createJiraIssue(summary, description) {
     def newIssue = [fields: [ // id or key must present for project.
-                               project: [key: 'PE'],
+                              // project: [key: 'PE'],
                                summary: summary,
                                description: description,
                                issuetype: [name: 'Bug'],
@@ -221,7 +221,7 @@ pipeline {
         }
         failure {
             echo "Build has failed"
-            //createJiraIssue("Jenkins and Jira integration for platform build: auto-created on build failure", "Jenkins build failure")
+            createJiraIssue("Jenkins and Jira integration for platform build: auto-created on build failure", "Jenkins build failure")
         }
         changed {
             echo "Build completion status has changed"
