@@ -10,14 +10,15 @@ def getJiraIssuesFromCommits() {
     def issues = shell('(git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | \
                        grep -oE "([a-zA-Z]+-[1-9][0-9]*)")                                 || \
                        true')
-    if (issues == '') {
+    
+    if (issues == null) {
         echo "Commits do not have issue key!!!"
         return null
     }
     
     echo "Original issues: ${issues}"
-    issues = issues?.trim()?.split('\n')
-    return issues?.toList()?.unique()
+    issues = issues.trim().split('\n')
+    return issues.toList().unique()
 }
 
 def getReleaseTag() {
