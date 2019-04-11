@@ -124,7 +124,7 @@ def createJiraIssue(summary, description) {
                                assignee: [name: 'ptt']
                             ]
                   ]
-    def status = true
+
     def response = jiraNewIssue issue: newIssue
     if (!response.successful) {
             echo response.error
@@ -132,7 +132,7 @@ def createJiraIssue(summary, description) {
     }
 
     echo response.data.toString()
-    return status
+    return true
 }
 
 def getJiraIssuesInBuild(buildNo) {
