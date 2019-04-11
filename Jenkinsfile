@@ -3,7 +3,7 @@ def shell(cmd) {
 }
 
 def getJiraIssuesFromCommits() {
-    if (${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT})
+    if (${GIT_PREVIOUS_SUCCESSFUL_COMMIT} == ${GIT_COMMIT})
         return null
     
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
