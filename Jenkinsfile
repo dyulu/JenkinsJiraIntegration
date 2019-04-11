@@ -57,14 +57,15 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
     */
     def status = true
     jiraIssues.each { issue ->
+        /*
         def response = jiraEditIssue idOrKey: issue, issue: modIssue
         if (!response.successful) {
             echo response.error
             status = false
         }
         echo response.data.toString()
-        
-        response = jiraGetIssue idOrKey: issue
+        */
+        def response = jiraGetIssue idOrKey: issue
         //echo response.data.toString()
         if (!response.successful) {
             echo response.error
