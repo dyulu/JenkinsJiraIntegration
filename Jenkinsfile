@@ -19,8 +19,8 @@ def getReleaseTag() {
 }
 
 //@NonCPS
-def addJiraComment(jiraIssues, releaseTag) {
-    def comment = [ body: "Integrated into build: ${releaseTag}" ]
+def addCommentToJiraIssues(jiraIssues, commentText) {
+    def comment = [ body: commentText ]
     def status = true
     jiraIssues.each { issue ->
         def response = jiraAddComment idOrKey: issue, input: comment
@@ -34,7 +34,7 @@ def addJiraComment(jiraIssues, releaseTag) {
     return status
 }
 
-def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
+def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
     def modIssue = [fields: [ customfield_10007: ["${releaseTag}"],
                               customfield_10008: ['11.3.0.14175']
                             ]
@@ -52,7 +52,7 @@ def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
     return status
 }
 
-def resolveJiraIssue(jiraIssues) {
+def resolveJiraIssues(jiraIssues) {
     def transition = [ transition: [id: '31'] ]
     //def transition = [ transition: [name: 'Done'] ]
     def status = true
@@ -202,9 +202,9 @@ pipeline {
                 def tag = getReleaseTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
-                //def status = addJiraComment(issues, tag)
-                def status = addReleaseTagToJiraIssue(issues, tag)
-                status = status | resolveJiraIssue(issues)
+                def status = addReleaseTagToJiraIssues(issues, tag)
+                //status |= addCommentToJiraIssues(issues, tag)
+                status |= resolveJiraIssues(issues)
                 if (status != true) {
                     echo "Failed doing Jira stuff, sending e-mail"
                     // sendMail, issues, tag, need to manually run a script to update Jira
