@@ -53,8 +53,8 @@ def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
 }
 
 def resolveJiraIssue(jiraIssues) {
-    // def transition = [ transition: [id: '31'] ]
-    def transition = [ transition: [name: 'Done'] ]
+    def transition = [ transition: [id: '31'] ]
+    //def transition = [ transition: [name: 'Done'] ]
     def status = true
     jiraIssues.each { issue ->
         def response = jiraTransitionIssue idOrKey: issue, input: transition
@@ -94,7 +94,7 @@ def resolveJiraIssue(jiraIssues) {
 
 def createJiraIssue(summary, description) {
     def newIssue = [fields: [ // id or key must present for project.
-                              // project: [key: 'PE'],
+                               project: [key: 'PE'],
                                summary: summary,
                                description: description,
                                issuetype: [name: 'Bug'],
