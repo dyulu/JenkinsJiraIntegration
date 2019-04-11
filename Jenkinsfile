@@ -7,9 +7,9 @@ def getJiraIssuesFromCommits() {
         return null
     
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
-    def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} |
-                       grep -oE "([a-zA-Z]+-[1-9][0-9]*)"
-                       || echo "Commits do not have issue key!!!"')
+    def issues = shell('(git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | \
+                       grep -oE "([a-zA-Z]+-[1-9][0-9]*)")                                || \
+                       echo "Commits do not have issue key!!!"')
     if (issues == null) {
         echo "Commits do not have issue key!!!"
         return null
@@ -227,7 +227,7 @@ pipeline {
             script {
                 def summary = "Jenkins and Jira integration for platform build: auto-created on build failure"
                 def description = "Jenkins build failure"
-                def status = createJiraIssue(summary, description)
+                def status = true     // createJiraIssue(summary, description)
                 if (status != true) {
                     echo "Failed creating Jira issue, sending e-mail"
                     // sendMail, build#, need to manually create Jira issue
