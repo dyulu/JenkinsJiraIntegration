@@ -20,7 +20,7 @@ def getJiraIssuesFromCommits() {
 def getReleaseTag() {
     // return shell('git tag -l --points-at HEAD')
     // return shell('git describe --tags')
-    return "11.3.67"
+    return "11.3.68"
 }
 
 //@NonCPS
@@ -49,11 +49,12 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
         echo "No Jira issues"
         return true
     }
-    
+    /*  
     def modIssue = [fields: [ customfield_10007: ["${releaseTag}"],
                               customfield_10008: ['11.3.0.14175']
                             ]
                    ]
+    */
     def status = true
     jiraIssues.each { issue ->
         def response = jiraEditIssue idOrKey: issue, issue: modIssue
@@ -62,6 +63,28 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
             status = false
         }
         echo response.data.toString()
+        
+        response = jiraGetIssue idOrKey: issue
+        //echo response.data.toString()
+        if (!response.successful) {
+            echo response.error
+            status = false
+        }
+        else if (response.data) {
+            def cf10007 = response.data.fields.customfield_10007
+            def cf10008 = response.data.fields.customfield_10008
+            cf10007.add(releaseTag)
+            cf10008.add('11.3.0.14176')
+            def modIssue = [fields: [ customfield_10007: cf10007,
+                                      customfield_10008: cf10008
+                                    ]
+                           ]
+            response = jiraEditIssue idOrKey: issue, issue: modIssue
+            if (!response.successful) {
+                echo response.error
+                status = false
+            }
+        }
     }
     
     return status
