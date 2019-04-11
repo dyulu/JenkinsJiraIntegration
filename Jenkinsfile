@@ -112,7 +112,6 @@ def createJiraIssue(summary, description) {
 
 def getJiraIssuesInBuild(buildNo) {
     def response = jiraJqlSearch jql: "PROJECT = PE AND cf[10007] = ${buildNo}"
-    //def response = jiraJqlSearch jql: 'PROJECT = PE AND type = Bug'
     
     def issues = []
     if (response.successful && response.data.total > 0) {
