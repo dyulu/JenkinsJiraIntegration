@@ -28,6 +28,11 @@ def getReleaseTag() {
 
 //@NonCPS
 def addCommentToJiraIssues(jiraIssues, commentText) {
+    if (!jiraIssues || jiraIssues.empty) {
+        echo "No Jira issues"
+        return true
+    }
+    
     def comment = [ body: commentText ]
     def status = true
     jiraIssues.each { issue ->
@@ -66,6 +71,11 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
 }
 
 def resolveJiraIssues(jiraIssues) {
+    if (!jiraIssues || jiraIssues.empty) {
+        echo "No Jira issues"
+        return true
+    }
+    
     def transition = [ transition: [id: '31'] ]
     //def transition = [ transition: [name: 'Done'] ]
     def status = true
