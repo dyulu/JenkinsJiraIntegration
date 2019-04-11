@@ -12,7 +12,7 @@ def getJiraIssuesFromCommits() {
         echo "Commits do not have issue key!!!"
         return null
     }
-    issues = issues.trim().split('\n')
+    issues = issues?.trim()?.split('\n')
     echo "Original issues: ${issues}"
     return issues.toList().unique()
 }
