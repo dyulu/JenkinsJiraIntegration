@@ -212,7 +212,7 @@ pipeline {
                 status = status | resolveJiraIssue(issues)
                 if (status != true) {
                     echo "Failed doing Jira stuff, sending e-mail"
-                    // sendMail, issues, tag, need to manual run a script to update Jira
+                    // sendMail, issues, tag, need to manually run a script to update Jira
                 }
             }
         }
@@ -221,7 +221,14 @@ pipeline {
         }
         failure {
             echo "Build has failed"
-            createJiraIssue("Jenkins and Jira integration for platform build: auto-created on build failure", "Jenkins build failure")
+            script {
+                def summary = "Jenkins and Jira integration for platform build: auto-created on build failure"
+                def description = "Jenkins build failure"
+                def status = createJiraIssue(summary, description)
+                if (status != true) {
+                    echo "Failed creating Jira issue, sending e-mail"
+                    // sendMail, build#, need to manually create Jira issue
+                }
         }
         changed {
             echo "Build completion status has changed"
