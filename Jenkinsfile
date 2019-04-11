@@ -25,7 +25,7 @@ def getReleaseTag() {
 
 //@NonCPS
 def addCommentToJiraIssues(jiraIssues, commentText) {
-    if (!jiraIssues || jiraIssues.empty) {
+    if (!jiraIssues) {
         echo "No Jira issues"
         return true
     }
@@ -45,7 +45,7 @@ def addCommentToJiraIssues(jiraIssues, commentText) {
 }
 
 def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
-    if (!jiraIssues || jiraIssues.empty) {
+    if (!jiraIssues) {
         echo "No Jira issues"
         return true
     }
@@ -91,7 +91,7 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
 }
 
 def resolveJiraIssues(jiraIssues) {
-    if (!jiraIssues || jiraIssues.empty) {
+    if (!jiraIssues) {
         echo "No Jira issues"
         return true
     }
