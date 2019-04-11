@@ -84,6 +84,13 @@ def resolveJiraIssue(jiraIssues) {
                 status = false
             }
             echo response.data.toString()
+            def comment = [ body: "Fix ready for verification!" ]
+            response = jiraAddComment idOrKey: issue, input: comment
+            if (!response.successful) {
+                echo response.error
+                status = false
+            }
+            echo response.data.toString()
         }
     }
     
@@ -200,8 +207,8 @@ pipeline {
                 def tag = getReleaseTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
-                def status = addJiraComment(issues, tag)
-                status = status | addReleaseTagToJiraIssue(issues, tag)
+                //def status = addJiraComment(issues, tag)
+                def status = addReleaseTagToJiraIssue(issues, tag)
                 status = status | resolveJiraIssue(issues)
                 if (status != true) {
                     echo "Failed doing Jira stuff, sending e-mail"
