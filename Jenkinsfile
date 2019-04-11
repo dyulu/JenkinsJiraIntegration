@@ -7,7 +7,12 @@ def getJiraIssuesFromCommits() {
         return null
     
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
-    def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([A-Z]+-[1-9][0-9]*)"').split('\n')
+    def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([a-zA-Z]+-[1-9][0-9]*)"')
+    if (issues == null) {
+        echo "Commits do not have issue key!!!"
+        return null
+    }
+    issues = issues.split('\n')
     echo "Original issues: ${issues}"
     return issues.toList().unique()
 }
