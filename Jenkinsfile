@@ -182,7 +182,7 @@ pipeline {
         stage('build') {
             steps {
                 echo "Build:"        
-                // sh 'mvn --version'
+                sh 'mvn --version'
                 script {
                     def issues = getJiraIssuesInBuild('11.3.67')
                     echo issues.toString()
