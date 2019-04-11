@@ -34,6 +34,26 @@ def addJiraComment(jiraIssues, releaseTag) {
     return status
 }
 
+def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
+    def modIssue = [fields: [ // id or key must present for project.
+                               project: [key: 'PE'],
+                               customfield_10007: ["${releaseTag}"],
+                               customfield_10008: ['11.3.0.14175']
+                            ]
+                  ]
+    def status = true
+    jiraIssues.each { issue ->
+        def response = jiraEditIssue idOrKey: issue, issue: modIssue
+        if (!response.successful) {
+            echo response.error
+            status = false
+        }
+        echo response.data.toString()
+    }
+    
+    return status
+}
+
 def resolveJiraIssue(jiraIssues) {
     def transition = [ transition: [id: '31'] ]
     def status = true
@@ -51,8 +71,8 @@ def resolveJiraIssue(jiraIssues) {
             echo response.error
             status = false
         }
-        else if (response.data && response.data.getIssueType().getName() == 'Bug') {
-            def reporter = response.data.getReporter()
+        else if (response.data && response.data.fields.issueType.name == 'Bug') {
+            def reporter = response.data.fields.reporter
             modIssue = [fields: [ // id or key must present for project.
                                  project: [key: 'PE'],
                                  assignee: reporter
@@ -65,26 +85,6 @@ def resolveJiraIssue(jiraIssues) {
             }
             echo response.data.toString()
         }
-    }
-    
-    return status
-}
-
-def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
-    def modIssue = [fields: [ // id or key must present for project.
-                               project: [key: 'PE'],
-                               customfield_10007: ["${releaseTag}"],
-                               customfield_10008: ['11.3.0.14175']
-                            ]
-                  ]
-    def status = true
-    jiraIssues.each { issue ->
-        def response = jiraEditIssue idOrKey: issue, issue: modIssue
-        if (!response.successful) {
-            echo response.error
-            status = false
-        }
-        echo response.data.toString()
     }
     
     return status
