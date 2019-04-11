@@ -205,7 +205,7 @@ pipeline {
                 status = status | resolveJiraIssue(issues)
                 if (status != true) {
                     echo "Failed doing Jira stuff, sending e-mail"
-                    // sendMail, issues, tag
+                    // sendMail, issues, tag, need to manual run a script to update Jira
                 }
             }
         }
