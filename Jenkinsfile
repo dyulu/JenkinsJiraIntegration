@@ -71,7 +71,7 @@ def resolveJiraIssue(jiraIssues) {
             echo response.error
             status = false
         }
-        else if (response.data && response.data.fields.issueType.name == 'Bug') {
+        else if (response.data && response.data.fields.issuetype.name == 'Bug') {
             def reporter = response.data.fields.reporter
             modIssue = [fields: [ // id or key must present for project.
                                  project: [key: 'PE'],
