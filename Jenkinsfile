@@ -66,7 +66,7 @@ def resolveJiraIssue(jiraIssues) {
         echo response.data.toString()
         
         response = jiraGetIssue idOrKey: issue
-        echo response.data.toString()
+        //echo response.data.toString()
         if (!response.successful) {
             echo response.error
             status = false
@@ -118,7 +118,7 @@ def getJiraIssuesInBuild(buildNo) {
     if (response.successful && response.data.total > 0) {
         echo "total: ${response.data.total}"
         response.data.issues.each { issue ->
-            echo issue.key
+            //echo issue.key
             issues.add(issue.key)
         }
     }
@@ -131,7 +131,7 @@ def getJiraIssuesInBuild(buildNo) {
 
 def getJiraIssueReporter(issueKey) {
     def issue = jiraGetIssue idOrKey: issueKey
-    echo issue.data.jiraGetReporter()
+    return issue.data.fields.reporter
 }
 
 @NonCPS
@@ -180,6 +180,8 @@ pipeline {
                 script {
                     def issues = getJiraIssuesInBuild('11.3.67')
                     echo issues.toString()
+                    def reporter = getJiraIssueReporter('PE-1')
+                    echo reporter.toString()
                 }
             }
         }
