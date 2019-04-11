@@ -229,6 +229,7 @@ pipeline {
                     echo "Failed creating Jira issue, sending e-mail"
                     // sendMail, build#, need to manually create Jira issue
                 }
+            }
         }
         changed {
             echo "Build completion status has changed"
