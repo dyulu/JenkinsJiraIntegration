@@ -35,12 +35,10 @@ def addJiraComment(jiraIssues, releaseTag) {
 }
 
 def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
-    def modIssue = [fields: [ // id or key must present for project.
-                              // project: [key: 'PE'],
-                               customfield_10007: ["${releaseTag}"],
-                               customfield_10008: ['11.3.0.14175']
+    def modIssue = [fields: [ customfield_10007: ["${releaseTag}"],
+                              customfield_10008: ['11.3.0.14175']
                             ]
-                  ]
+                   ]
     def status = true
     jiraIssues.each { issue ->
         def response = jiraEditIssue idOrKey: issue, issue: modIssue
@@ -55,7 +53,8 @@ def addReleaseTagToJiraIssue(jiraIssues, releaseTag) {
 }
 
 def resolveJiraIssue(jiraIssues) {
-    def transition = [ transition: [id: '31'] ]
+    // def transition = [ transition: [id: '31'] ]
+    def transition = [ transition: [name: 'Done'] ]
     def status = true
     jiraIssues.each { issue ->
         def response = jiraTransitionIssue idOrKey: issue, input: transition
@@ -73,11 +72,7 @@ def resolveJiraIssue(jiraIssues) {
         }
         else if (response.data && response.data.fields.issuetype.name == 'Bug') {
             def reporter = response.data.fields.reporter
-            modIssue = [fields: [ // id or key must present for project.
-                                  // project: [key: 'PE'],
-                                 assignee: reporter
-                                ]
-                       ]
+            def modIssue = [fields: [ assignee: reporter ]]
             response = jiraEditIssue idOrKey: issue, issue: modIssue
             if (!response.successful) {
                 echo response.error
