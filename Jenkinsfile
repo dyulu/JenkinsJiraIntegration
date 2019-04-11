@@ -22,8 +22,8 @@ def getJiraIssuesFromCommits() {
 
 def getReleaseTag() {
     // return shell('git tag -l --points-at HEAD')
-    // return shell('git describe --tags')
-    return "11.3.67"
+    return shell('git describe --tags')
+    //return "11.3.67"
 }
 
 //@NonCPS
