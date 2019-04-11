@@ -1,5 +1,5 @@
 def shell(cmd) {
-    return sh(script: cmd, returnStdout: true)   //.trim()
+    return sh(script: "${cmd} || true", returnStdout: true).trim()
 }
 
 def getJiraIssuesFromCommits() {
@@ -7,17 +7,16 @@ def getJiraIssuesFromCommits() {
         return null
     
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
-    def issues = shell('(git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | \
-                       grep -oE "([a-zA-Z]+-[1-9][0-9]*)")                                 || \
-                       true')
+    def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | \
+                        grep -oE "([a-zA-Z]+-[1-9][0-9]*)"')
     
-    if (issues == null) {
+    if (issues == '') {
         echo "Commits do not have issue key!!!"
         return null
     }
     
     echo "Original issues: ${issues}"
-    issues = issues.trim().split('\n')
+    issues = issues.split('\n')
     return issues.toList().unique()
 }
 
