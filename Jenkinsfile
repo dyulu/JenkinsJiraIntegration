@@ -12,9 +12,10 @@ def getJiraIssuesFromCommits() {
         echo "Commits do not have issue key!!!"
         return null
     }
-    issues = issues?.trim()?.split('\n')
+    
     echo "Original issues: ${issues}"
-    return issues.toList().unique()
+    issues = issues?.trim()?.split('\n')
+    return issues?.toList()?.unique()
 }
 
 def getReleaseTag() {
