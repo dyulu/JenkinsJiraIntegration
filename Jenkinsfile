@@ -81,7 +81,7 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
     return status
 }
 
-def resolveJiraIssues(jiraIssues) {
+def resolveJiraIssues(jiraIssues, releaseTag) {
     if (!jiraIssues) {
         return true
     }
@@ -263,7 +263,7 @@ pipeline {
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 try {
-                    if (!resolveJiraIssues(issues)) {
+                    if (!resolveJiraIssues(issues, tag)) {
                         echo "Failed doing Jira stuff, sending e-mail with issues and tag"
                         // sendMail, issues, tag; need to manually run a script to update Jira
                     }
