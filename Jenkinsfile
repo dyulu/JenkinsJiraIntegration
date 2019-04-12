@@ -208,7 +208,7 @@ def getChangesInBuild(build, changes) {
             commitmsg = items[j].msg.toUpperCase()
             issue = commitmsg =~ /([A-Z]+-[1-9][0-9]*)/
             if (issue.find())
-                changes.add(issue.group())
+                changes.add(issue.group().toString())
         }
     }
 
