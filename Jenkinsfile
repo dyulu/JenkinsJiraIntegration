@@ -204,7 +204,7 @@ def getChangesInBuild(build, changes) {
         echo "build ${build.id}, i ${i}"
         def items = changeSets[i].items
         for (int j = 0; j < items.length; j++) {
-            echo "j ${j}, ${items[j].issueNum}, ${items[j].action}, ${items[j].author}"
+            echo "j ${j}, ${items[j].author}"
             changes.add(items[j].msg)
         }
     }
