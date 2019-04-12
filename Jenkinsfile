@@ -95,7 +95,7 @@ def resolveJiraIssues(jiraIssues) {
             echo response.error
             status = false
         }
-        echo esponse.data.toString()
+        echo response.data.toString()
         
         response = jiraGetIssue idOrKey: issue
         //echo response.data.toString()
@@ -237,7 +237,7 @@ pipeline {
         stage('build') {
             steps {
                 echo "Build:"        
-                // sh 'mvn --version'
+                 sh 'mvn --version'
                 script {
                     def issues = getJiraIssuesInBuild('11.3.67')
                     echo issues.toString()
