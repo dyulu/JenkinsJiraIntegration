@@ -217,7 +217,7 @@ def getChangesSinceLastSuccessfulBuild() {
     def changes = []
     def build = currentBuild
     while (build) {
-        add(getChangesInBuild(build), changes)
+        getChangesInBuild(build, changes)
         build = build.previousBuild
         if (!build || build.result == 'SUCCESS') {
             break
