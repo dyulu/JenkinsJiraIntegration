@@ -269,7 +269,7 @@ pipeline {
                     }
                 } catch (error) {
                     echo "Failed doing Jira stuff, sending e-mail with issues, tag and error"
-                    echo error
+                    echo error.toString()
                     // sendMail, issues, tag, error; need to manually run a script to update Jira
                 }
             }
@@ -290,7 +290,7 @@ pipeline {
                     }
                 } catch (error) {
                     echo "Failed doing Jira stuff, sending e-mail with issues, tag and error"
-                    echo error
+                    echo error.toString()
                     // sendMail, build#, error; need to manually run a script to update Jira
                 }
             }
