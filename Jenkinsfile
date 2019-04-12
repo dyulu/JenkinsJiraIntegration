@@ -8,12 +8,6 @@ def getJiraIssuesFromCommits() {
     
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
     def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([a-zA-Z]+-[1-9][0-9]*)"')
-    /*
-    if (issues == '') {
-        echo "Commits do not have issue key!!!"
-        return null
-    }
-    */
     return issues.split('\n').toList().unique()
 }
 
@@ -50,23 +44,9 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
         echo "No Jira issues"
         return true
     }
-    /*  
-    def modIssue = [fields: [ customfield_10007: ["${releaseTag}"],
-                              customfield_10008: ['11.3.0.14175']
-                            ]
-                   ]
-    */
+
     def status = true
     jiraIssues.each { issue ->
-        /*
-        def response = jiraEditIssue idOrKey: issue, issue: modIssue
-        if (!response.successful) {
-            echo response.error
-            status = false
-        }
-        echo response.data.toString()
-        */
-        
         def response = jiraGetIssue idOrKey: issue
         //echo response.data.toString()
         if (!response.successful) {
@@ -103,7 +83,6 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
 
 def resolveJiraIssues(jiraIssues) {
     if (!jiraIssues) {
-        echo "No Jira issues"
         return true
     }
     
@@ -116,7 +95,7 @@ def resolveJiraIssues(jiraIssues) {
             echo response.error
             status = false
         }
-        echo response.data.toString()
+        echo esponse.data.toString()
         
         response = jiraGetIssue idOrKey: issue
         //echo response.data.toString()
@@ -300,8 +279,9 @@ pipeline {
         failure {
             echo "Build has failed"
             script {
+                def logfile = "${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/log"
                 def summary = "Jenkins and Jira integration for platform build: auto-created on build failure"
-                def description = "Jenkins build failure"
+                def description = shell("grep -A1000 "End of Pipeline" ${logfile}")
                 try {
                     if (!createJiraIssue(summary, description)) {
                         echo "Failed creating Jira issue, sending e-mail"
