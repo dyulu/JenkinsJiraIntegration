@@ -114,10 +114,10 @@ def resolveJiraIssues(jiraIssues, releaseTag) {
             }
             if (cf10008) {
                 //cf10008.add('11.3.0.14175')
-                cf10008.add('12.0.80')
+                cf10008.add('12.0.0.80')
             } else {
                 //cf10008 = ['11.3.0.14175']
-                cf10008.add('12.0.80')
+                cf10008.add('12.0.0.80')
             }
             def modIssue = null
             if (response.data.fields.issuetype.name == 'Bug') {
