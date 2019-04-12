@@ -202,10 +202,10 @@ def getChangesInBuild(build) {
     def changeSets = build.changeSets
     def changes = []
     for (int i = 0; i < changeSets.size(); i++) {
-        echo i
+        echo "i ${i}"
         def items = changeSets[i].items
         for (int j = 0; j < items.length; j++) {
-            echo j
+            echo "j ${j}"
             changes.add(items[j].msg)
         }
     }
@@ -296,6 +296,7 @@ pipeline {
         }
         failure {
             echo "Build has failed"
+            /*
             script {
                 def job = JOB_NAME.split('/')[0]
                 def logfile = "${JENKINS_HOME}/jobs/${job}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/log"
@@ -313,6 +314,7 @@ pipeline {
                     // sendMail, build#, error; need to manually run a script to update Jira
                 }
             }
+            */
         }
         changed {
             echo "Build completion status has changed"
