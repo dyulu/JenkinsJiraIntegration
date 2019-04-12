@@ -198,20 +198,18 @@ def getJiraIssueReporter(issueKey) {
 }
 
 @NonCPS
-def getChangesInBuild(build) {
+def getChangesInBuild(build, changes) {
     def changeSets = build.changeSets
-    def changes = []
     for (int i = 0; i < changeSets.size(); i++) {
-        echo "i ${i}"
+        echo "build ${build.id}, i ${i}"
         def items = changeSets[i].items
         for (int j = 0; j < items.length; j++) {
-            echo "j ${j}"
+            echo "j ${j}, items[j].issueNum, items[j].action, items[j].author"
             changes.add(items[j].msg)
         }
     }
 
     echo changes.toString()
-    return changes
 }
 
 @NonCPS
@@ -219,7 +217,7 @@ def getChangesSinceLastSuccessfulBuild() {
     def changes = []
     def build = currentBuild
     while (build) {
-        changes.add(getChangesInBuild(build))
+        add(getChangesInBuild(build), changes)
         build = build.previousBuild
         if (!build || build.result == 'SUCCESS') {
             break
