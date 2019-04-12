@@ -206,7 +206,7 @@ def getChangesInBuild(build, changes) {
         for (int j = 0; j < items.length; j++) {
             echo "j ${j}, ${items[j].author}"
             def commitmsg = items[j].msg.toUpperCase()
-            def issue = commitmsg =~ /([A-Z]+-[1-9][0-9]*)/
+            Matcher issue = commitmsg =~ /([A-Z]+-[1-9][0-9]*)/
             if (issue.matches())
                 changes.add(issue[0][0])
         }
