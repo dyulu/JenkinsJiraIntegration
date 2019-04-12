@@ -8,7 +8,7 @@ def getJiraIssuesFromCommits() {
     
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
     def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([a-zA-Z]+-[1-9][0-9]*)"')
-    return issues.toUpper().split('\n').toList().unique()
+    return issues.toUpperCase().split('\n').toList().unique()
 }
 
 def getReleaseTag() {
