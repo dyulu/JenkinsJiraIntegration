@@ -207,8 +207,8 @@ def getChangesInBuild(build, changes) {
             echo "j ${j}, ${items[j].author}"
             commitmsg = items[j].msg.toUpperCase()
             issue = commitmsg =~ /([A-Z]+-[1-9][0-9]*)/
-            if (issue)
-                changes.add(issue)
+            if (issue.find())
+                changes.add(issue.group())
         }
     }
 
