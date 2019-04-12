@@ -198,22 +198,32 @@ def getJiraIssueReporter(issueKey) {
 }
 
 @NonCPS
-def getChangeString(changeLogSets) {
-    MAX_MSG_LEN = 100
-    def changeString = ""
-    for (int i = 0; i < changeLogSets.size(); i++) {
-        def entries = changeLogSets[i].items
-        for (int j = 0; j < entries.length; j++) {
-            def entry = entries[j]
-            truncated_msg = entry.msg.take(MAX_MSG_LEN)
-            changeString += " - ${truncated_msg} [${entry.author}]\n"
+def getChangesInBuild(build) {
+    def changeSets = build.changeSets
+    def changes = []
+    for (int i = 0; i < changeSets.size(); i++) {
+        echo i
+        def items = changeSets[i].items
+        for (int j = 0; j < items.length; j++) {
+            echo j
+            changes.add(items[j].msg)
         }
     }
 
-    if (!changeString) {
-        changeString = " - No new changes"
+    echo changes.toString()
+    return changes
+}
+
+@NonCPS
+def getChangesSinceLastSuccessfulBuild() {
+    def changes = []
+    def build = currentBuild
+    while (build && build.result != 'SUCCESS') {
+        changes.add(getChangesInBuild(build))
+        build = build.previousBuild
     }
-    return changeString
+    
+    return changes
 }
     
 pipeline {
@@ -255,8 +265,8 @@ pipeline {
         always {
             echo "Post actions:"
             script {
-                changes = getChangeString(currentBuild.changeSets)
-                echo changes
+                changes = getChangesSinceLastSuccessfulBuild
+                echo changes.toString()
             }
         }
         success {
