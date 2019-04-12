@@ -20,7 +20,8 @@ def getJiraIssuesFromCommits() {
 def getReleaseTag() {
     // return shell('git tag -l --points-at HEAD')
     // return shell('git describe --tags')
-    return "11.3.68"
+    //return "11.3.67"
+    return "12.0.58"
 }
 
 //@NonCPS
@@ -75,8 +76,16 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
         else if (response.data) {
             def cf10007 = response.data.fields.customfield_10007
             def cf10008 = response.data.fields.customfield_10008
-            cf10007.add(releaseTag)
-            cf10008.add('11.3.0.14176')
+            if (cf10007) {
+                cf10007.add(releaseTag)
+            } else {
+                cf10007 = [releaseTag]
+            }
+            if (cf10008) {
+                cf10008.add('11.3.0.14176')
+            } else {
+                cf10008 = ['11.3.0.14176']
+            }
             def modIssue = [fields: [ customfield_10007: cf10007,
                                       customfield_10008: cf10008
                                     ]
@@ -115,9 +124,36 @@ def resolveJiraIssues(jiraIssues) {
             echo response.error
             status = false
         }
-        else if (response.data && response.data.fields.issuetype.name == 'Bug') {
-            def reporter = response.data.fields.reporter
-            def modIssue = [fields: [ assignee: reporter ]]
+        else if (response.data) {
+            def isBug = false
+            def cf10007 = response.data.fields.customfield_10007
+            def cf10008 = response.data.fields.customfield_10008
+            if (cf10007) {
+                cf10007.add(releaseTag)
+            } else {
+                cf10007 = [releaseTag]
+            }
+            if (cf10008) {
+                cf10008.add('11.3.0.14175')
+            } else {
+                cf10008 = ['11.3.0.14175']
+            }
+            def modIssue = null
+            if (response.data.fields.issuetype.name == 'Bug') {
+                isBug = true
+                def reporter = response.data.fields.reporter
+                modIssue = [fields: [ customfield_10007: cf10007,
+                                      customfield_10008: cf10008,
+                                      assignee: reporter
+                                    ]
+                           ]
+            } else {
+                modIssue = [fields: [ customfield_10007: cf10007,
+                                      customfield_10008: cf10008
+                                    ]
+                           ]
+            }
+            
             response = jiraEditIssue idOrKey: issue, issue: modIssue
             if (!response.successful) {
                 echo response.error
@@ -247,12 +283,14 @@ pipeline {
                 def tag = getReleaseTag()
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
-                def status = addReleaseTagToJiraIssues(issues, tag)
-                //status |= addCommentToJiraIssues(issues, tag)
-                status |= resolveJiraIssues(issues)
-                if (status != true) {
-                    echo "Failed doing Jira stuff, sending e-mail"
-                    // sendMail, issues, tag, need to manually run a script to update Jira
+                try {
+                    if (!resolveJiraIssues(issues)) {
+                        echo "Failed doing Jira stuff, sending e-mail with issues and tag"
+                        // sendMail, issues, tag; need to manually run a script to update Jira
+                    }
+                } catch (error) {
+                    echo "Failed doing Jira stuff, sending e-mail with issues, tag and error"
+                        // sendMail, issues, tag, error; need to manually run a script to update Jira
                 }
             }
         }
@@ -264,10 +302,14 @@ pipeline {
             script {
                 def summary = "Jenkins and Jira integration for platform build: auto-created on build failure"
                 def description = "Jenkins build failure"
-                def status = true     // createJiraIssue(summary, description)
-                if (status != true) {
-                    echo "Failed creating Jira issue, sending e-mail"
-                    // sendMail, build#, need to manually create Jira issue
+                try {
+                    if (!createJiraIssue(summary, description)) {
+                        echo "Failed creating Jira issue, sending e-mail"
+                        // sendMail, build#; need to manually create Jira issue
+                    }
+                } catch (error) {
+                    echo "Failed doing Jira stuff, sending e-mail with issues, tag and error"
+                        // sendMail, build#, error; need to manually run a script to update Jira
                 }
             }
         }
