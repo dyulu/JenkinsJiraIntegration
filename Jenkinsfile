@@ -282,9 +282,9 @@ pipeline {
             script {
                 def job = JOB_NAME.split('/')[0]
                 def logfile = "${JENKINS_HOME}/jobs/${job}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/log"
-                def summary = "Jenkins and Jira integration for platform build: auto-created on build failure"
-                //def description = shell("grep -A50 Error ${logfile}")
-                def description = shell("cat ${logfile}")
+                def summary = "Jenkins and Jira integration for platform build: auto-created on build ${BUILD_NUMBER} failure"
+                //def description = shell("grep -A50 FAIL ${logfile}")
+                def description = "Console log file: ${logfile}"
                 try {
                     if (!createJiraIssue(summary, description)) {
                         echo "Failed creating Jira issue, sending e-mail"
