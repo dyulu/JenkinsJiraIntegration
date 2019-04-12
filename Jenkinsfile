@@ -205,7 +205,10 @@ def getChangesInBuild(build, changes) {
         def items = changeSets[i].items
         for (int j = 0; j < items.length; j++) {
             echo "j ${j}, ${items[j].author}"
-            changes.add(items[j].msg)
+            commitmsg = items[j].msg.toUpperCase()
+            issue = commitmsg =~ /([A-Z]+-[1-9][0-9]*)/
+            if (issue)
+                changes.add(issue)
         }
     }
 
@@ -224,7 +227,7 @@ def getChangesSinceLastSuccessfulBuild() {
         }
     }
     
-    return changes
+    return changes.unique()
 }
     
 pipeline {
