@@ -8,7 +8,7 @@ def getJiraIssuesFromCommits() {
     
     //return shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | cut -d " " -f 2').split('\n')
     def issues = shell('git log --oneline ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT} | grep -oE "([a-zA-Z]+-[1-9][0-9]*)"')
-    return issues.split('\n').toList().unique()
+    return issues.toUpper().split('\n').toList().unique()
 }
 
 def getReleaseTag() {
@@ -269,7 +269,8 @@ pipeline {
                     }
                 } catch (error) {
                     echo "Failed doing Jira stuff, sending e-mail with issues, tag and error"
-                        // sendMail, issues, tag, error; need to manually run a script to update Jira
+                    echo error
+                    // sendMail, issues, tag, error; need to manually run a script to update Jira
                 }
             }
         }
@@ -289,7 +290,8 @@ pipeline {
                     }
                 } catch (error) {
                     echo "Failed doing Jira stuff, sending e-mail with issues, tag and error"
-                        // sendMail, build#, error; need to manually run a script to update Jira
+                    echo error
+                    // sendMail, build#, error; need to manually run a script to update Jira
                 }
             }
         }
