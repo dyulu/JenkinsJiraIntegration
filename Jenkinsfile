@@ -265,7 +265,7 @@ pipeline {
         always {
             echo "Post actions:"
             script {
-                changes = getChangesSinceLastSuccessfulBuild
+                changes = getChangesSinceLastSuccessfulBuild()
                 echo changes.toString()
             }
         }
