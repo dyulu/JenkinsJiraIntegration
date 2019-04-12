@@ -218,10 +218,10 @@ def getChangesInBuild(build) {
 def getChangesSinceLastSuccessfulBuild() {
     def changes = []
     def build = currentBuild
-    while (build && build.result != 'SUCCESS') {
+    do {
         changes.add(getChangesInBuild(build))
         build = build.previousBuild
-    }
+    } while (build && build.result != 'SUCCESS')
     
     return changes
 }
