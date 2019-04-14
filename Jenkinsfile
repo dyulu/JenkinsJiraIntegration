@@ -207,10 +207,7 @@ def getChangesInBuild(build, changes) {
             echo "j ${j}, ${items[j].author}"
             def commitmsg = items[j].msg.toUpperCase()
             def issues = commitmsg =~ /([A-Z]+-[1-9][0-9]*)/
-            issues.each {
-                changes += it[0]
-                changes += ','
-            }
+            issues.each { changes.add(it[0]) }
         }
     }
 
@@ -219,7 +216,7 @@ def getChangesInBuild(build, changes) {
 
 @NonCPS
 def getChangesSinceLastSuccessfulBuild() {
-    def changes = ''
+    def changes = []
     def build = currentBuild
     while (build) {
         getChangesInBuild(build, changes)
@@ -229,7 +226,7 @@ def getChangesSinceLastSuccessfulBuild() {
         }
     }
     
-    return changes.split(',').toList().unique()
+    return changes.unique()
 }
     
 pipeline {
@@ -299,13 +296,13 @@ pipeline {
         }
         failure {
             echo "Build has failed"
-            /*
             script {
                 def job = JOB_NAME.split('/')[0]
                 def logfile = "${JENKINS_HOME}/jobs/${job}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/log"
                 def summary = "Jenkins and Jira integration for platform build: auto-created on build ${BUILD_NUMBER} failure"
-                //def description = shell("grep -A10 'command not found' ${logfile}")
-                def description = "Console log file: ${logfile}"
+                def description = "BUILD_URL: ${BUILD_URL}\nConsole log file: ${logfile}\n"
+                description += shell("grep -A10 'command not found' ${logfile}")
+                print description
                 try {
                     if (!createJiraIssue(summary, description)) {
                         echo "Failed creating Jira issue, sending e-mail"
@@ -317,7 +314,6 @@ pipeline {
                     // sendMail, build#, error; need to manually run a script to update Jira
                 }
             }
-            */
         }
         changed {
             echo "Build completion status has changed"
