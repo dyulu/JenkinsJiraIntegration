@@ -206,17 +206,20 @@ def getChangesInBuild(build, changes) {
         for (int j = 0; j < items.length; j++) {
             echo "j ${j}, ${items[j].author}"
             def commitmsg = items[j].msg.toUpperCase()
-            def issue = commitmsg =~ /([A-Z]+-[1-9][0-9]*)/
-            changes.add(issue[0][1])
+            def issues = commitmsg =~ /([A-Z]+-[1-9][0-9]*)/
+            issues.each {
+                changes += it[0]
+                changes += ','
+            }
         }
     }
 
-    echo changes.toString()
+    echo changes
 }
 
 @NonCPS
 def getChangesSinceLastSuccessfulBuild() {
-    def changes = []
+    def changes = ''
     def build = currentBuild
     while (build) {
         getChangesInBuild(build, changes)
@@ -226,7 +229,7 @@ def getChangesSinceLastSuccessfulBuild() {
         }
     }
     
-    return changes.unique()
+    return changes.split(',').toList().unique()
 }
     
 pipeline {
