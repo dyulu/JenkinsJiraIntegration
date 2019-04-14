@@ -211,7 +211,7 @@ def getChangesInBuild(build, changes) {
         }
     }
 
-    echo changes
+    echo changes.toString()
 }
 
 @NonCPS
