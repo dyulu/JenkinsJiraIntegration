@@ -272,7 +272,7 @@ pipeline {
             echo "Post actions:"
             script {
                 changes = getChangesSinceLastSuccessfulBuild()
-                echo changes.toString()
+                echo "All Jira issues from change log: ${changes}"
             }
         }
         success {
@@ -304,7 +304,7 @@ pipeline {
                 def job = JOB_NAME.split('/')[0]
                 def logfile = "${JENKINS_HOME}/jobs/${job}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/log"
                 def summary = "Jenkins and Jira integration for platform build: auto-created on build ${BUILD_NUMBER} failure"
-                //def description = shell("grep -A50 FAIL ${logfile}")
+                //def description = shell("grep -A10 'command not found' ${logfile}")
                 def description = "Console log file: ${logfile}"
                 try {
                     if (!createJiraIssue(summary, description)) {
