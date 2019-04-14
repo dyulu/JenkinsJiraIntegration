@@ -300,8 +300,8 @@ pipeline {
                 def job = JOB_NAME.split('/')[0]
                 def logfile = "${JENKINS_HOME}/jobs/${job}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/log"
                 def summary = "Jenkins and Jira integration for platform build: auto-created on build ${BUILD_NUMBER} failure"
-                def description = "BUILD_URL: ${BUILD_URL}\nConsole log file: ${logfile}\n"
-                description += shell("grep -A10 'command not found' ${logfile}")
+                def description = "BUILD_URL: ${BUILD_URL}\n\nConsole log file: ${logfile}\n"
+                description += shell("grep -B10 'command not found' ${logfile}")
                 print description
                 
                 try {
