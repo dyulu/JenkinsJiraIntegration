@@ -303,6 +303,7 @@ pipeline {
                 def description = "BUILD_URL: ${BUILD_URL}\nConsole log file: ${logfile}\n"
                 description += shell("grep -A10 'command not found' ${logfile}")
                 print description
+                
                 try {
                     if (!createJiraIssue(summary, description)) {
                         echo "Failed creating Jira issue, sending e-mail"
