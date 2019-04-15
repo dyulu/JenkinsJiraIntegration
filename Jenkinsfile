@@ -14,8 +14,8 @@ def getJiraIssuesFromCommits() {
 def getReleaseTag() {
     // return shell('git tag -l --points-at HEAD')
     // return shell('git describe --tags')
-    //return "11.3.67"
-    return "12.0.58"
+    return "11.3.67"
+    //return "12.0.58"
 }
 
 //@NonCPS
@@ -251,7 +251,7 @@ pipeline {
         stage('build') {
             steps {
                 echo "Build:"        
-                // sh 'mvn --version'
+                sh 'mvn --version'
                 /*
                 script {
                     def issues = getJiraIssuesInBuild('11.3.67')
