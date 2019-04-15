@@ -116,8 +116,7 @@ def resolveJiraIssues(jiraIssues, releaseTag) {
                 //cf10008.add('11.3.0.14175')
                 cf10008.add('12.0.0.80')
             } else {
-                //cf10008 = ['11.3.0.14175']
-                cf10008.add('12.0.0.80')
+                cf10008 = ['11.3.0.14175']
             }
             def modIssue = null
             if (response.data.fields.issuetype.name == 'Bug') {
@@ -323,5 +322,3 @@ pipeline {
         }
     }
 }
-
-//resolve PE-20
