@@ -267,6 +267,7 @@ pipeline {
     post {
         always {
             echo "Post actions:"
+            archiveArtifacts artifacts: "Jenkinsfile", allowEmptyArchive: true
             /*
             script {
                 changes = getChangesSinceLastSuccessfulBuild()
