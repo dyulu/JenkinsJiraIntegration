@@ -229,17 +229,18 @@ def getChangesSinceLastSuccessfulBuild() {
 }
     
 pipeline {
-    agent any
+    //agent any
     
-    //agent {
-    //    docker { image 'maven:latest' }
-    //}
-    //agent { dockerfile true }
+    agent {
+        node { label 'SCS_ubuntu' }
+    }
     
-    //parameters {
-    //    string(name: 'issues', defaultValue: 'PE-0')
-    //    string(name: 'tag', defaultValue: 'release/0.0.0')
-    //}
+    /*
+    agent {
+        docker { image 'maven:latest' }
+    }
+    agent { dockerfile true }
+    */
     
     stages {
         stage('pre-build') {
