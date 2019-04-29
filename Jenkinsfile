@@ -60,7 +60,7 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
             } else {
                 cf17423 = [releaseTag]
             }
-            def modIssue = [fields: [ customfield_10007: cf17423 ]]
+            def modIssue = [fields: [ customfield_17423: cf17423 ]]
             response = jiraEditIssue idOrKey: issue, issue: modIssue
             if (!response.successful) {
                 echo response.error
@@ -106,12 +106,12 @@ def resolveJiraIssues(jiraIssues, releaseTag) {
             if (response.data.fields.issuetype.name == 'Bug') {
                 isBug = true
                 def reporter = response.data.fields.reporter
-                modIssue = [fields: [ customfield_10007: cf17423,
+                modIssue = [fields: [ customfield_17423: cf17423,
                                       assignee: reporter
                                     ]
                            ]
             } else {
-                modIssue = [fields: [ customfield_10007: cf17423 ]]
+                modIssue = [fields: [ customfield_17423: cf17423 ]]
             }
             
             response = jiraEditIssue idOrKey: issue, issue: modIssue
@@ -156,7 +156,7 @@ def createJiraIssue(summary, description) {
 }
 
 def getJiraIssuesInBuild(buildNo) {
-    def response = jiraJqlSearch jql: "PROJECT = PE AND cf[10007] = ${buildNo}"
+    def response = jiraJqlSearch jql: "PROJECT = PE AND cf[17423] = ${buildNo}"
     
     def issues = []
     if (response.successful && response.data.total > 0) {
