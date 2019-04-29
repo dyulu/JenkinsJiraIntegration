@@ -88,7 +88,7 @@ def resolveJiraIssues(jiraIssues, releaseTag) {
         }
         echo response.data.toString()
         
-        def response = jiraGetIssue idOrKey: issue
+        response = jiraGetIssue idOrKey: issue
         //echo response.data.toString()
         if (!response.successful) {
             echo response.error
