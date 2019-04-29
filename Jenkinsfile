@@ -54,22 +54,13 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
             status = false
         }
         else if (response.data) {
-            def cf10007 = response.data.fields.customfield_10007
-            def cf10008 = response.data.fields.customfield_10008
-            if (cf10007) {
-                cf10007.add(releaseTag)
+            def cf17423 = response.data.fields.customfield_17423
+            if (cf17423) {
+                cf17423.add(releaseTag)
             } else {
-                cf10007 = [releaseTag]
+                cf17423 = [releaseTag]
             }
-            if (cf10008) {
-                cf10008.add('11.3.0.14176')
-            } else {
-                cf10008 = ['11.3.0.14176']
-            }
-            def modIssue = [fields: [ customfield_10007: cf10007,
-                                      customfield_10008: cf10008
-                                    ]
-                           ]
+            def modIssue = [fields: [ customfield_10007: cf17423 ]]
             response = jiraEditIssue idOrKey: issue, issue: modIssue
             if (!response.successful) {
                 echo response.error
@@ -97,7 +88,7 @@ def resolveJiraIssues(jiraIssues, releaseTag) {
         }
         echo response.data.toString()
         
-        response = jiraGetIssue idOrKey: issue
+        def response = jiraGetIssue idOrKey: issue
         //echo response.data.toString()
         if (!response.successful) {
             echo response.error
@@ -105,33 +96,22 @@ def resolveJiraIssues(jiraIssues, releaseTag) {
         }
         else if (response.data) {
             def isBug = false
-            def cf10007 = response.data.fields.customfield_10007
-            def cf10008 = response.data.fields.customfield_10008
-            if (cf10007) {
-                cf10007.add(releaseTag)
+            def cf17423 = response.data.fields.customfield_17423
+            if (cf17423) {
+                cf17423.add(releaseTag)
             } else {
-                cf10007 = [releaseTag]
-            }
-            if (cf10008) {
-                //cf10008.add('11.3.0.14175')
-                cf10008.add('12.0.0.80')
-            } else {
-                cf10008 = ['11.3.0.14175']
+                cf17423 = [releaseTag]
             }
             def modIssue = null
             if (response.data.fields.issuetype.name == 'Bug') {
                 isBug = true
                 def reporter = response.data.fields.reporter
-                modIssue = [fields: [ customfield_10007: cf10007,
-                                      customfield_10008: cf10008,
+                modIssue = [fields: [ customfield_10007: cf17423,
                                       assignee: reporter
                                     ]
                            ]
             } else {
-                modIssue = [fields: [ customfield_10007: cf10007,
-                                      customfield_10008: cf10008
-                                    ]
-                           ]
+                modIssue = [fields: [ customfield_10007: cf17423 ]]
             }
             
             response = jiraEditIssue idOrKey: issue, issue: modIssue
@@ -154,6 +134,8 @@ def resolveJiraIssues(jiraIssues, releaseTag) {
 }
 
 def createJiraIssue(summary, description) {
+    return true
+    
     def newIssue = [fields: [ // id or key must present for project.
                                project: [key: 'PE'],
                                summary: summary,
@@ -283,7 +265,8 @@ pipeline {
                 echo "All Jira issues: ${issues}"
                 echo "Tag: ${tag}"
                 try {
-                    if (!resolveJiraIssues(issues, tag)) {
+                    // if (!resolveJiraIssues(issues, tag)) {
+                    if (!addReleaseTagToJiraIssues(issues, tag)) {
                         echo "Failed doing Jira stuff, sending e-mail with issues and tag"
                         // sendMail, issues, tag; need to manually run a script to update Jira
                     }
