@@ -243,8 +243,8 @@ pipeline {
                     def issues = getJiraIssuesInBuild('11.3.67')
                     echo issues.toString()
                     
-                    def reporter = getJiraIssueReporter('PE-5432')
-                    echo reporter.toString()
+                    //def reporter = getJiraIssueReporter('PE-5432')
+                    //echo reporter.toString()
                 }
             }
         }
