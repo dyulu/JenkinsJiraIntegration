@@ -44,7 +44,9 @@ def addReleaseTagToJiraIssues(jiraIssues, releaseTag) {
         echo "No Jira issues"
         return true
     }
-
+    echo "No op"
+    return true
+    
     def status = true
     jiraIssues.each { issue ->
         def response = jiraGetIssue idOrKey: issue
@@ -134,6 +136,7 @@ def resolveJiraIssues(jiraIssues, releaseTag) {
 }
 
 def createJiraIssue(summary, description) {
+    echo "No op"
     return true
     
     def newIssue = [fields: [ // id or key must present for project.
